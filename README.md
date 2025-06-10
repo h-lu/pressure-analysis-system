@@ -38,6 +38,22 @@ pressure-analysis-system/
 └── run_server.py     # 应用启动入口
 ```
 
+## ☁️ 腾讯云部署（推荐生产环境）
+
+### 🚀 一键部署到腾讯云
+
+[![Deploy to Tencent Cloud](https://img.shields.io/badge/Deploy%20to-Tencent%20Cloud-00A971?style=for-the-badge&logo=tencentcloud)](https://console.cloud.tencent.com/)
+
+**轻量应用服务器（最简单）:**
+```bash
+# SSH连接到腾讯云服务器后执行
+wget https://raw.githubusercontent.com/h-lu/pressure-analysis-system/main/tencent-deploy.sh
+chmod +x tencent-deploy.sh
+./tencent-deploy.sh
+```
+
+**详细部署指南**: 📖 [腾讯云部署快速开始](./TENCENT_QUICK_START.md)
+
 ## 🌐 Render部署指南
 
 ### 一键部署到Render
@@ -180,6 +196,7 @@ python run_server.py
 
 ## 🔗 相关链接
 
+- [腾讯云部署文档](./TENCENT_QUICK_START.md)
 - [Render部署文档](https://render.com/docs)
 - [FastAPI文档](https://fastapi.tiangolo.com/)
 - [Vue.js文档](https://vuejs.org/)
@@ -187,4 +204,4 @@ python run_server.py
 
 ---
 
-**快速开始**: 点击上方的 "Deploy to Render" 按钮，几分钟内即可拥有您自己的压力数据分析平台！ 
+**快速开始**: 点击上方的 "Deploy to Tencent Cloud" 或 "Deploy to Render" 按钮，几分钟内即可拥有您自己的压力数据分析平台！
