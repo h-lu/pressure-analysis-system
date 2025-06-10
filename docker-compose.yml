@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  pressure-analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-"your_deepseek_api_key_here"}
+    volumes:
+      # 持久化上传文件和分析结果
+      - ./data/uploads:/app/backend/uploads
+      - ./data/charts:/app/backend/static/charts
+      - ./data/reports:/app/backend/static/reports
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 开发环境配置 (可选)
+  pressure-analysis-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=true
+      # 设置DeepSeek API密钥
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-"your_deepseek_api_key_here"}
+    volumes:
+      # 开发模式下直接映射代码，并持久化数据
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - ./run_server.py:/app/run_server.py
+      - ./data/uploads:/app/backend/uploads
+      - ./data/charts:/app/backend/static/charts
+      - ./data/reports:/app/backend/static/reports
+    profiles:
+      - dev
+    restart: unless-stopped
+
+volumes:
+  pressure_data:
+    driver: local 
