@@ -70,7 +70,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ENV LANG=zh_CN.UTF-8
 ENV LANGUAGE=zh_CN:zh
 ENV LC_ALL=zh_CN.UTF-8
-ENV DEEPSEEK_API_KEY="your_deepseek_api_key_here"
 
 # 预安装R包，使用最可靠的官方CRAN镜像
 RUN R -e "install.packages(c('tidyverse', 'readr', 'ggplot2', 'dplyr', 'slider', 'broom', 'GGally', 'plotly', 'patchwork', 'cluster', 'jsonlite'), repos='https://cloud.r-project.org/')" && \

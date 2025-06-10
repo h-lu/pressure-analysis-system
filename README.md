@@ -187,4 +187,4 @@ python run_server.py
 
 ---
 
-**快速开始**: 点击上方的 "Deploy to Render" 按钮，几分钟内即可拥有您自己的压力数据分析平台！
+**快速开始**: 点击上方的 "Deploy to Render" 按钮，几分钟内即可拥有您自己的压力数据分析平台！ 
