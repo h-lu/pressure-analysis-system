@@ -50,18 +50,12 @@ pip install -r requirements.txt
 
 ```r
 # 设置CRAN镜像（可选）
-options(repos = c(CRAN = "https://cloud.r-project.org/"))
+options(repos = c(CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
 
 # 安装核心包
-install.packages(c(
-  "ggplot2", "dplyr", "tidyr", "corrplot", "VIM",
-  "forecast", "changepoint", "nortest", "car",
-  "psych", "MVN", "cluster", "factoextra"
-))
+install.packages(c("tidyverse", "slider", "GGally", "plotly", "patchwork", "cluster", 
+                   "tools", "jsonlite", "argparse"))
 
-# 验证安装
-library(ggplot2)
-library(dplyr)
 ```
 
 ### 4. 前端环境配置

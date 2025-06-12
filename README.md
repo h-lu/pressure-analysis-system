@@ -78,7 +78,7 @@ Node.js >= 16.0
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/your-username/pressure-analysis-system.git
+git clone https://github.com/hb-lu/pressure-analysis-system.git
 cd pressure-analysis-system
 ```
 
@@ -93,8 +93,8 @@ pip install -r requirements.txt
 
 ```bash
 # 在R控制台中运行
-install.packages(c("ggplot2", "dplyr", "tidyr", "corrplot", "VIM", 
-                   "forecast", "changepoint", "nortest", "car"))
+install.packages(c("tidyverse", "slider", "GGally", "plotly", "patchwork", "cluster", 
+                   "tools", "jsonlite", "argparse"))
 ```
 
 ### 4. 前端安装
