@@ -1,0 +1,50 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- 整体背景 -->
+  <rect width="800" height="600" fill="#f5f7fa"/>
+  
+  <!-- 顶部导航栏 -->
+  <rect x="0" y="0" width="800" height="60" fill="#409EFF" stroke="#366db3" stroke-width="1"/>
+  <text x="20" y="35" fill="white" font-size="18" font-weight="bold">压力采集数据分析系统</text>
+  <text x="650" y="35" fill="white" font-size="14">主题切换 | 用户设置</text>
+  
+  <!-- 侧边栏 -->
+  <rect x="0" y="60" width="200" height="540" fill="#ffffff" stroke="#e4e7ed" stroke-width="1"/>
+  
+  <!-- 侧边栏菜单项 -->
+  <rect x="10" y="80" width="180" height="40" fill="#409EFF" rx="4"/>
+  <text x="20" y="105" fill="white" font-size="14">📊 数据分析</text>
+  
+  <rect x="10" y="130" width="180" height="40" fill="#f0f0f0" rx="4"/>
+  <text x="20" y="155" fill="#606266" font-size="14">📋 任务管理</text>
+  
+  <rect x="10" y="180" width="180" height="40" fill="#f0f0f0" rx="4"/>
+  <text x="20" y="205" fill="#606266" font-size="14">📚 历史记录</text>
+  
+  <rect x="10" y="230" width="180" height="40" fill="#f0f0f0" rx="4"/>
+  <text x="20" y="255" fill="#606266" font-size="14">📁 文件管理</text>
+  
+  <rect x="10" y="280" width="180" height="40" fill="#f0f0f0" rx="4"/>
+  <text x="20" y="305" fill="#606266" font-size="14">⚙️ 系统设置</text>
+  
+  <!-- 系统状态区域 -->
+  <rect x="10" y="520" width="180" height="70" fill="#f9f9f9" stroke="#e4e7ed" stroke-width="1" rx="4"/>
+  <text x="20" y="540" fill="#909399" font-size="12">系统状态</text>
+  <circle cx="30" cy="555" r="4" fill="#67C23A"/>
+  <text x="45" y="560" fill="#606266" font-size="12">服务正常</text>
+  <text x="20" y="580" fill="#909399" font-size="10">API: 连接正常</text>
+  
+  <!-- 主内容区 -->
+  <rect x="200" y="60" width="600" height="540" fill="#ffffff" stroke="#e4e7ed" stroke-width="1"/>
+  
+  <!-- 面包屑导航 -->
+  <rect x="220" y="80" width="560" height="30" fill="#fafbfc"/>
+  <text x="230" y="100" fill="#909399" font-size="12">首页 > 数据分析</text>
+  
+  <!-- 主内容标题 -->
+  <text x="230" y="140" fill="#303133" font-size="20" font-weight="bold">数据分析</text>
+  
+  <!-- 内容区域占位 -->
+  <rect x="220" y="160" width="560" height="420" fill="#f8f9fa" stroke="#e4e7ed" stroke-width="1" stroke-dasharray="5,5" rx="4"/>
+  <text x="480" y="380" fill="#c0c4cc" font-size="16" text-anchor="middle">主要内容区域</text>
+  <text x="480" y="400" fill="#c0c4cc" font-size="14" text-anchor="middle">根据选中的页面显示对应内容</text>
+</svg> 

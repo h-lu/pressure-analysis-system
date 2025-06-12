@@ -1,0 +1,513 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# API 集成指南
+
+## 后端 API 架构
+
+基于 FastAPI 的压力系统后端，详细规范见：[frontend_redesign_spec.md](mdc:frontend_redesign_spec.md)
+
+### 核心 API 模块
+
+#### 1. 文件管理 API (`/api/files.py`)
+```javascript
+// 文件上传
+POST /api/upload
+Content-Type: multipart/form-data
+Body: { file: File }
+
+// 文件预览  
+GET /api/preview/{filename}
+Response: { data: Array, columns: Array, stats: Object }
+
+// 数据验证
+GET /api/validate/{filename}
+Response: { valid: boolean, errors: Array }
+
+// 文件列表
+GET /api/list
+Response: { files: Array }
+
+// 图表获取
+GET /api/chart/{task_id}/{chart_name}
+Response: Binary (PNG image)
+```
+
+#### 2. 分析任务 API (`/api/analysis.py`)
+```javascript
+// 启动分析任务
+POST /api/analyze
+Body: {
+  filename: string,
+  target_forces: [5, 25, 50],
+  absolute_tolerance: 0.5,
+  percentage_tolerance: 5
+}
+Response: { task_id: string, status: string }
+
+// 查询任务状态
+GET /api/task/{task_id}
+Response: {
+  task_id: string,
+  status: "pending|running|completed|failed",
+  progress: number,
+  stage: string,
+  start_time: string,
+  logs: Array
+}
+
+// 获取分析结果
+GET /api/results/{task_id}
+Response: {
+  task_id: string,
+  data_summary: Object,
+  analysis_results: Object,
+  chart_names: Array
+}
+
+// 任务列表
+GET /api/tasks
+Response: { tasks: Array }
+
+// 删除任务
+DELETE /api/task/{task_id}
+Response: { success: boolean }
+```
+
+#### 3. DeepSeek AI 分析 API (`/api/deepseek/`)
+```javascript
+// 生成 AI 分析报告
+POST /api/deepseek/generate-report
+Body: { task_id: string }
+Response: { analysis_id: string, status: string }
+
+// 生成综合 Word 报告
+POST /api/deepseek/generate-comprehensive-word-report
+Body: { task_id: string }
+Response: { report_id: string, status: string }
+
+// 获取 AI 分析结果
+GET /api/deepseek/get/{task_id}
+Response: { analysis: string, recommendations: Array }
+
+// 检查 AI 分析状态
+GET /api/deepseek/check/{task_id}
+Response: { status: string, progress: number }
+
+// 下载 Word 报告
+GET /api/download-comprehensive-report/{task_id}
+Response: Binary (DOCX file)
+```
+
+## 前端 API 服务层
+
+### API 客户端配置
+```javascript
+// utils/http.js
+import axios from 'axios'
+
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8000',
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+// 请求拦截器
+apiClient.interceptors.request.use(config => {
+  console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`)
+  return config
+})
+
+// 响应拦截器
+apiClient.interceptors.response.use(
+  response => response.data,
+  error => {
+    console.error('[API Error]', error)
+    return Promise.reject(error)
+  }
+)
+
+export { apiClient }
+```
+
+### API 服务模块
+
+#### 分析服务 (`api/analysis.js`)
+```javascript
+import { apiClient } from '@/utils/http'
+
+export const analysisAPI = {
+  // 文件上传
+  uploadFile(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return apiClient.post('/api/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  },
+
+  // 文件预览
+  previewFile(filename) {
+    return apiClient.get(`/api/preview/${filename}`)
+  },
+
+  // 启动分析
+  startAnalysis(params) {
+    return apiClient.post('/api/analyze', params)
+  },
+
+  // 任务状态查询
+  getTaskStatus(taskId) {
+    return apiClient.get(`/api/task/${taskId}`)
+  },
+
+  // 获取分析结果
+  getResults(taskId) {
+    return apiClient.get(`/api/results/${taskId}`)
+  },
+
+  // 任务列表
+  getTasks() {
+    return apiClient.get('/api/tasks')
+  },
+
+  // 删除任务
+  deleteTask(taskId) {
+    return apiClient.delete(`/api/task/${taskId}`)
+  }
+}
+```
+
+#### DeepSeek AI 服务 (`api/deepseek.js`)
+```javascript
+export const deepseekAPI = {
+  // 生成 AI 分析
+  generateReport(taskId) {
+    return apiClient.post('/api/deepseek/generate-report', { task_id: taskId })
+  },
+
+  // 生成综合 Word 报告
+  generateWordReport(taskId) {
+    return apiClient.post('/api/deepseek/generate-comprehensive-word-report', { 
+      task_id: taskId 
+    })
+  },
+
+  // 获取 AI 分析结果
+  getAnalysis(taskId) {
+    return apiClient.get(`/api/deepseek/get/${taskId}`)
+  },
+
+  // 检查 AI 分析状态
+  checkAnalysis(taskId) {
+    return apiClient.get(`/api/deepseek/check/${taskId}`)
+  },
+
+  // 测试连接
+  testConnection() {
+    return apiClient.get('/api/deepseek/test-connection')
+  },
+
+  // 下载 Word 报告
+  downloadReport(taskId) {
+    return apiClient.get(`/api/download-comprehensive-report/${taskId}`, {
+      responseType: 'blob'
+    })
+  }
+}
+```
+
+#### 图表服务 (`api/charts.js`)
+```javascript
+export const chartsAPI = {
+  // 获取图表
+  getChart(taskId, chartName) {
+    return apiClient.get(`/api/chart/${taskId}/${chartName}`, {
+      responseType: 'blob'
+    })
+  },
+
+  // 获取所有图表列表
+  getChartsList(taskId) {
+    // 35个图表的名称列表
+    return [
+      // 基础分析图表 (8个)
+      'force_time_series', 'force_distribution', 'force_boxplot',
+      'absolute_deviation_boxplot', 'percentage_deviation_boxplot',
+      'interactive_3d_scatter', 'scatter_matrix', 'correlation_matrix',
+      
+      // 控制图 (7个)
+      'shewhart_control', 'moving_average', 'xbar_r_control',
+      'cusum_control', 'ewma_control', 'imr_control', 'run_chart',
+      
+      // 专业质量分析 (12个)
+      'process_capability', 'pareto_chart', 'residual_analysis',
+      'qq_normality', 'radar_chart', 'heatmap',
+      'success_rate_trend', 'capability_index', 'quality_dashboard',
+      'waterfall_chart', 'spatial_clustering', 'parallel_coordinates',
+      
+      // 多维分析 (8个)
+      'xy_heatmap', 'projection_2d', 'position_anomaly_heatmap',
+      'spatial_density', 'multivariate_relations', 'anomaly_patterns',
+      'quality_distribution_map', 'comprehensive_assessment'
+    ]
+  }
+}
+```
+
+## 状态管理集成
+
+### Pinia Store (`stores/analysis.js`)
+```javascript
+import { defineStore } from 'pinia'
+import { analysisAPI, deepseekAPI, chartsAPI } from '@/api'
+
+export const useAnalysisStore = defineStore('analysis', {
+  state: () => ({
+    currentTask: null,
+    tasks: [],
+    results: {},
+    charts: {},
+    deepseekAnalysis: {},
+    loading: {
+      upload: false,
+      analysis: false,
+      ai: false
+    }
+  }),
+
+  actions: {
+    // 文件上传
+    async uploadFile(file) {
+      this.loading.upload = true
+      try {
+        const response = await analysisAPI.uploadFile(file)
+        return response
+      } finally {
+        this.loading.upload = false
+      }
+    },
+
+    // 启动分析
+    async startAnalysis(params) {
+      this.loading.analysis = true
+      try {
+        const response = await analysisAPI.startAnalysis(params)
+        this.currentTask = response
+        return response
+      } finally {
+        this.loading.analysis = false
+      }
+    },
+
+    // 轮询任务状态
+    async pollTaskStatus(taskId) {
+      const response = await analysisAPI.getTaskStatus(taskId)
+      this.currentTask = response
+      
+      // 如果任务完成，获取结果
+      if (response.status === 'completed') {
+        await this.getResults(taskId)
+      }
+      
+      return response
+    },
+
+    // 获取分析结果
+    async getResults(taskId) {
+      try {
+        const results = await analysisAPI.getResults(taskId)
+        this.results[taskId] = results
+        return results
+      } catch (error) {
+        console.error('获取分析结果失败:', error)
+        throw error
+      }
+    },
+
+    // 生成 AI 分析
+    async generateAIAnalysis(taskId) {
+      this.loading.ai = true
+      try {
+        const response = await deepseekAPI.generateWordReport(taskId)
+        return response
+      } finally {
+        this.loading.ai = false
+      }
+    },
+
+    // 获取图表
+    async loadChart(taskId, chartName) {
+      try {
+        const chartBlob = await chartsAPI.getChart(taskId, chartName)
+        const chartUrl = URL.createObjectURL(chartBlob)
+        
+        if (!this.charts[taskId]) {
+          this.charts[taskId] = {}
+        }
+        this.charts[taskId][chartName] = chartUrl
+        
+        return chartUrl
+      } catch (error) {
+        console.error(`加载图表失败: ${chartName}`, error)
+        throw error
+      }
+    }
+  }
+})
+```
+
+## 组合式函数 (Composables)
+
+### 任务轮询 (`composables/useTaskPolling.js`)
+```javascript
+import { ref, onUnmounted } from 'vue'
+import { useAnalysisStore } from '@/stores/analysis'
+
+export function useTaskPolling(taskId) {
+  const analysisStore = useAnalysisStore()
+  const polling = ref(false)
+  let intervalId = null
+
+  const startPolling = (interval = 2000) => {
+    if (polling.value) return
+
+    polling.value = true
+    intervalId = setInterval(async () => {
+      try {
+        const task = await analysisStore.pollTaskStatus(taskId)
+        
+        // 如果任务完成或失败，停止轮询
+        if (['completed', 'failed'].includes(task.status)) {
+          stopPolling()
+        }
+      } catch (error) {
+        console.error('轮询任务状态失败:', error)
+        stopPolling()
+      }
+    }, interval)
+  }
+
+  const stopPolling = () => {
+    if (intervalId) {
+      clearInterval(intervalId)
+      intervalId = null
+    }
+    polling.value = false
+  }
+
+  // 组件卸载时清理
+  onUnmounted(() => {
+    stopPolling()
+  })
+
+  return {
+    polling,
+    startPolling,
+    stopPolling
+  }
+}
+```
+
+### 图表管理 (`composables/useCharts.js`)
+```javascript
+import { ref, computed } from 'vue'
+import { useAnalysisStore } from '@/stores/analysis'
+import { chartsAPI } from '@/api'
+
+export function useCharts(taskId) {
+  const analysisStore = useAnalysisStore()
+  const loading = ref(false)
+
+  const charts = computed(() => {
+    return analysisStore.charts[taskId] || {}
+  })
+
+  const loadChart = async (chartName) => {
+    loading.value = true
+    try {
+      return await analysisStore.loadChart(taskId, chartName)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const loadAllCharts = async () => {
+    const chartNames = chartsAPI.getChartsList(taskId)
+    const promises = chartNames.map(name => loadChart(name))
+    
+    try {
+      await Promise.all(promises)
+    } catch (error) {
+      console.error('批量加载图表失败:', error)
+    }
+  }
+
+  return {
+    charts,
+    loading,
+    loadChart,
+    loadAllCharts
+  }
+}
+```
+
+## 错误处理规范
+
+### 统一错误处理
+```javascript
+// utils/errorHandler.js
+import { ElMessage } from 'element-plus'
+
+export const handleError = (error, context = '') => {
+  console.error(`[${context}] Error:`, error)
+  
+  let message = '操作失败，请重试'
+  
+  if (error.response) {
+    const { status, data } = error.response
+    switch (status) {
+      case 400:
+        message = data.detail || '请求参数错误'
+        break
+      case 404:
+        message = '资源不存在'
+        break
+      case 500:
+        message = '服务器内部错误'
+        break
+    }
+  } else if (error.request) {
+    message = '网络连接失败'
+  }
+  
+  ElMessage.error(message)
+  return message
+}
+```
+
+## API 最佳实践
+
+### 1. 请求优化
+- 使用请求缓存避免重复请求
+- 实现请求重试机制
+- 添加请求超时处理
+
+### 2. 错误处理
+- 统一错误处理中间件
+- 用户友好的错误提示
+- 错误日志记录
+
+### 3. 状态管理
+- API 调用状态统一管理
+- 缓存策略优化
+- 数据一致性保证
+
+### 4. 类型安全
+- 使用 TypeScript 定义 API 类型
+- 请求参数验证
+- 响应数据验证

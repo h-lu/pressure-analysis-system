@@ -1,0 +1,33 @@
+INFO:     Will watch for changes in these directories: ['/Users/wangxq/Documents/压力系统']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [64454] using StatReload
+INFO:     Started server process [64456]
+INFO:     Waiting for application startup.
+INFO:backend.main:所有必要目录已创建
+INFO:backend.main:压力采集数据分析系统 启动完成
+INFO:     Application startup complete.
+INFO:     127.0.0.1:61336 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61339 - "POST /api/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61341 - "POST /api/analyze HTTP/1.1" 200 OK
+INFO:backend.services.r_analysis:R分析引擎初始化成功
+INFO:backend.services.r_analysis:开始分析任务 e375fb38-72e6-4afb-8d3d-3851b0ff75d1
+INFO:backend.services.r_analysis:数据文件路径: /Users/wangxq/Documents/压力系统/backend/uploads/25cfc17a-0b7a-4f47-a10c-114df5887fa7.csv
+INFO:backend.services.r_analysis:R命令参数: data_file=/Users/wangxq/Documents/压力系统/backend/uploads/25cfc17a-0b7a-4f47-a10c-114df5887fa7.csv, output_dir=/Users/wangxq/Documents/压力系统/backend/static/charts/e375fb38-72e6-4afb-8d3d-3851b0ff75d1
+INFO:backend.services.r_analysis:过程能力数据: [{'target_force': 5, 'Cp': 3.333, 'Cpk': 3.317, '能力等级': '优秀'}, {'target_force': 25, 'Cp': 2.564, 'Cpk': 2.538, '能力等级': '优秀'}, {'target_force': 50, 'Cp': 2.778, 'Cpk': 2.778, '能力等级': '优秀'}]
+INFO:backend.services.r_analysis:生成 33 个图表, 3 个文件
+INFO:backend.services.r_analysis:分析任务 e375fb38-72e6-4afb-8d3d-3851b0ff75d1 完成
+INFO:     127.0.0.1:61343 - "GET /api/results/e375fb38-72e6-4afb-8d3d-3851b0ff75d1 HTTP/1.1" 200 OK
+INFO:backend.api.deepseek_analysis:开始调用DeepSeek API生成分析报告...
+INFO:httpx:HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 400 Bad Request"
+ERROR:backend.api.deepseek_analysis:生成分析报告失败: Error code: 400 - {'error': {'message': 'Invalid max_tokens value, the valid range of max_tokens is [1, 8192]', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+INFO:     127.0.0.1:61412 - "POST /api/deepseek/generate-report HTTP/1.1" 500 Internal Server Error
+WARNING:  StatReload detected changes in 'backend/api/deepseek_analysis.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [64456]
+INFO:     Started server process [64515]
+INFO:     Waiting for application startup.
+INFO:backend.main:所有必要目录已创建
+INFO:backend.main:压力采集数据分析系统 启动完成
+INFO:     Application startup complete.

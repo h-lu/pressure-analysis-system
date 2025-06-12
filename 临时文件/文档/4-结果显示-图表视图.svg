@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .window-bg { fill: #f3f3f3; }
+      .panel-bg { fill: #ffffff; stroke: #e1e1e1; stroke-width: 1; }
+      .button { fill: #0078d4; stroke: none; rx: 4; }
+      .button-secondary { fill: #f3f2f1; stroke: #c8c6c4; stroke-width: 1; rx: 4; }
+      .button-text { fill: #ffffff; font-family: 'Segoe UI', sans-serif; font-size: 14px; text-anchor: middle; }
+      .button-text-secondary { fill: #323130; font-family: 'Segoe UI', sans-serif; font-size: 14px; text-anchor: middle; }
+      .title { font-family: 'Segoe UI', sans-serif; font-size: 20px; font-weight: 600; fill: #323130; }
+      .subtitle { font-family: 'Segoe UI', sans-serif; font-size: 16px; font-weight: 500; fill: #323130; }
+      .text { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #605e5c; }
+      .chart-title { font-family: 'Segoe UI', sans-serif; font-size: 14px; font-weight: 500; fill: #323130; }
+      .chart-label { font-family: 'Segoe UI', sans-serif; font-size: 11px; fill: #605e5c; }
+      .menu-item { font-family: 'Segoe UI', sans-serif; font-size: 13px; fill: #323130; }
+      .status-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #605e5c; }
+      .chart-bg { fill: #ffffff; stroke: #e1e1e1; stroke-width: 1; }
+      .grid-line { stroke: #f3f2f1; stroke-width: 1; }
+      .data-line { stroke: #0078d4; stroke-width: 2; fill: none; }
+      .target-line { stroke: #107c10; stroke-width: 2; stroke-dasharray: "5,5"; }
+      .tolerance-band { fill: #107c10; opacity: 0.1; }
+      .data-point { fill: #0078d4; }
+      .histogram-bar { fill: #0078d4; stroke: #ffffff; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <!-- 窗口背景 -->
+  <rect class="window-bg" width="1200" height="800" rx="8"/>
+  
+  <!-- 标题栏 -->
+  <rect fill="#ffffff" width="1200" height="40" rx="8 8 0 0"/>
+  <text class="title" x="20" y="27">压力采集数据分析仪</text>
+  
+  <!-- 窗口控制按钮 -->
+  <circle fill="#ff5f57" cx="1170" cy="20" r="6"/>
+  <circle fill="#ffbd2e" cx="1150" cy="20" r="6"/>
+  <circle fill="#28ca42" cx="1130" cy="20" r="6"/>
+  
+  <!-- 菜单栏 -->
+  <rect fill="#fafafa" stroke="#e1e1e1" stroke-width="1" x="0" y="40" width="1200" height="30"/>
+  <text class="menu-item" x="20" y="58">文件</text>
+  <text class="menu-item" x="60" y="58">设置</text>
+  <text class="menu-item" x="100" y="58">帮助</text>
+  
+  <!-- 工具栏 -->
+  <rect fill="#ffffff" stroke="#e1e1e1" stroke-width="1" x="0" y="70" width="1200" height="50"/>
+  <rect class="button" x="20" y="85" width="80" height="20"/>
+  <text class="button-text" x="60" y="97">加载CSV</text>
+  <rect class="button" x="120" y="85" width="80" height="20"/>
+  <text class="button-text" x="160" y="97">运行分析</text>
+  <rect class="button" x="220" y="85" width="80" height="20"/>
+  <text class="button-text" x="260" y="97">保存报告</text>
+  
+  <!-- 左侧控制面板 (折叠状态) -->
+  <rect class="panel-bg" x="20" y="140" width="300" height="600" rx="6"/>
+  <text class="subtitle" x="40" y="170">参数配置</text>
+  <text class="text" x="40" y="195">目标力值: 5, 25, 50 N</text>
+  <text class="text" x="40" y="215">容差: ±2.0 N</text>
+  <text class="text" x="40" y="235">分析项目: 基础统计、漂移趋势</text>
+  
+  <!-- 右侧结果显示区 -->
+  <rect class="panel-bg" x="340" y="140" width="840" height="600" rx="6"/>
+  <text class="subtitle" x="360" y="170">分析结果</text>
+  
+  <!-- 标签页 -->
+  <rect fill="#f3f2f1" stroke="#e1e1e1" stroke-width="1" x="360" y="190" width="120" height="30" rx="4 4 0 0"/>
+  <text class="text" x="420" y="209" text-anchor="middle">摘要与统计</text>
+  
+  <rect fill="#0078d4" x="480" y="190" width="100" height="30" rx="4 4 0 0"/>
+  <text fill="#ffffff" font-family="'Segoe UI', sans-serif" font-size="13px" x="530" y="209" text-anchor="middle">图表视图</text>
+  
+  <rect fill="#f3f2f1" stroke="#e1e1e1" stroke-width="1" x="580" y="190" width="100" height="30" rx="4 4 0 0"/>
+  <text class="text" x="630" y="209" text-anchor="middle">详细数据</text>
+  
+  <!-- 图表选择区域 -->
+  <rect fill="#f8f9fa" stroke="#e1e1e1" stroke-width="1" x="360" y="230" width="820" height="40" rx="4"/>
+  <text class="text" x="380" y="250">图表类型:</text>
+  
+  <!-- 图表选择按钮 -->
+  <rect class="button" x="480" y="238" width="120" height="24"/>
+  <text class="button-text" x="540" y="253">时间序列图</text>
+  
+  <rect class="button-secondary" x="610" y="238" width="80" height="24"/>
+  <text class="button-text-secondary" x="650" y="253">偏差图</text>
+  
+  <rect class="button-secondary" x="700" y="238" width="80" height="24"/>
+  <text class="button-text-secondary" x="740" y="253">直方图</text>
+  
+  <rect class="button-secondary" x="790" y="238" width="80" height="24"/>
+  <text class="button-text-secondary" x="830" y="253">箱线图</text>
+  
+  <!-- 主图表区域 -->
+  <rect class="chart-bg" x="360" y="280" width="820" height="400" rx="4"/>
+  
+  <!-- 图表标题 -->
+  <text class="chart-title" x="770" y="300" text-anchor="middle">力值时间序列图 - 25N目标力值</text>
+  
+  <!-- 图表坐标轴 -->
+  <!-- Y轴 -->
+  <line stroke="#c8c6c4" stroke-width="2" x1="390" y1="310" x2="390" y2="650"/>
+  <!-- X轴 -->
+  <line stroke="#c8c6c4" stroke-width="2" x1="390" y1="650" x2="1150" y2="650"/>
+  
+  <!-- 网格线 -->
+  <line class="grid-line" x1="390" y1="580" x2="1150" y2="580"/>
+  <line class="grid-line" x1="390" y1="510" x2="1150" y2="510"/>
+  <line class="grid-line" x1="390" y1="440" x2="1150" y2="440"/>
+  <line class="grid-line" x1="390" y1="370" x2="1150" y2="370"/>
+  
+  <line class="grid-line" x1="550" y1="310" x2="550" y2="650"/>
+  <line class="grid-line" x1="710" y1="310" x2="710" y2="650"/>
+  <line class="grid-line" x1="870" y1="310" x2="870" y2="650"/>
+  <line class="grid-line" x1="1030" y1="310" x2="1030" y2="650"/>
+  
+  <!-- Y轴标签 -->
+  <text class="chart-label" x="385" y="654" text-anchor="end">20</text>
+  <text class="chart-label" x="385" y="584" text-anchor="end">22</text>
+  <text class="chart-label" x="385" y="514" text-anchor="end">24</text>
+  <text class="chart-label" x="385" y="444" text-anchor="end">26</text>
+  <text class="chart-label" x="385" y="374" text-anchor="end">28</text>
+  <text class="chart-label" x="385" y="314" text-anchor="end">30</text>
+  
+  <!-- X轴标签 -->
+  <text class="chart-label" x="390" y="670">0</text>
+  <text class="chart-label" x="550" y="670">200</text>
+  <text class="chart-label" x="710" y="670">400</text>
+  <text class="chart-label" x="870" y="670">600</text>
+  <text class="chart-label" x="1030" y="670">800</text>
+  
+  <!-- 轴标题 -->
+  <text class="chart-label" x="770" y="690" text-anchor="middle">测量序号</text>
+  <text class="chart-label" x="350" y="480" text-anchor="middle" transform="rotate(-90 350 480)">力值 (N)</text>
+  
+  <!-- 目标力值线 -->
+  <line class="target-line" x1="390" y1="480" x2="1150" y2="480"/>
+  
+  <!-- 容差带 -->
+  <rect class="tolerance-band" x="390" y="440" width="760" height="80"/>
+  
+  <!-- 数据线 (模拟数据点) -->
+  <polyline class="data-line" points="390,485 420,478 450,492 480,475 510,488 540,482 570,495 600,471 630,487 660,483 690,476 720,489 750,485 780,473 810,491 840,487 870,479 900,494 930,481 960,486 990,477 1020,490 1050,484 1080,478 1110,492 1140,481"/>
+  
+  <!-- 数据点 -->
+  <circle class="data-point" cx="390" cy="485" r="2"/>
+  <circle class="data-point" cx="420" cy="478" r="2"/>
+  <circle class="data-point" cx="450" cy="492" r="2"/>
+  <circle class="data-point" cx="480" cy="475" r="2"/>
+  <circle class="data-point" cx="510" cy="488" r="2"/>
+  <circle class="data-point" cx="540" cy="482" r="2"/>
+  <circle class="data-point" cx="570" cy="495" r="2"/>
+  <circle class="data-point" cx="600" cy="471" r="2"/>
+  <circle class="data-point" cx="630" cy="487" r="2"/>
+  <circle class="data-point" cx="660" cy="483" r="2"/>
+  <circle class="data-point" cx="690" cy="476" r="2"/>
+  <circle class="data-point" cx="720" cy="489" r="2"/>
+  <circle class="data-point" cx="750" cy="485" r="2"/>
+  <circle class="data-point" cx="780" cy="473" r="2"/>
+  <circle class="data-point" cx="810" cy="491" r="2"/>
+  <circle class="data-point" cx="840" cy="487" r="2"/>
+  <circle class="data-point" cx="870" cy="479" r="2"/>
+  <circle class="data-point" cx="900" cy="494" r="2"/>
+  <circle class="data-point" cx="930" cy="481" r="2"/>
+  <circle class="data-point" cx="960" cy="486" r="2"/>
+  <circle class="data-point" cx="990" cy="477" r="2"/>
+  <circle class="data-point" cx="1020" cy="490" r="2"/>
+  <circle class="data-point" cx="1050" cy="484" r="2"/>
+  <circle class="data-point" cx="1080" cy="478" r="2"/>
+  <circle class="data-point" cx="1110" cy="492" r="2"/>
+  <circle class="data-point" cx="1140" cy="481" r="2"/>
+  
+  <!-- 图例 -->
+  <rect fill="#ffffff" stroke="#e1e1e1" stroke-width="1" x="950" y="320" width="200" height="80" rx="4"/>
+  <line class="data-line" x1="970" y1="340" x2="1000" y2="340"/>
+  <circle class="data-point" cx="985" cy="340" r="2"/>
+  <text class="chart-label" x="1010" y="344">实际测量值</text>
+  
+  <line class="target-line" x1="970" y1="360" x2="1000" y2="360"/>
+  <text class="chart-label" x="1010" y="364">目标力值 (25N)</text>
+  
+  <rect class="tolerance-band" x="970" y="375" width="30" height="10"/>
+  <text class="chart-label" x="1010" y="384">容差范围 (±2N)</text>
+  
+  <!-- 目标力值选择 -->
+  <text class="text" x="380" y="710">目标力值选择:</text>
+  <rect fill="#ffffff" stroke="#c8c6c4" stroke-width="1" x="500" y="695" width="100" height="25" rx="4"/>
+  <text class="text" x="510" y="710">25N 目标力值</text>
+  <polygon fill="#605e5c" points="590,705 595,700 595,710"/>
+  
+  <!-- 图表操作按钮 -->
+  <rect class="button-secondary" x="1000" y="695" width="80" height="25"/>
+  <text class="button-text-secondary" x="1040" y="712">导出图表</text>
+  
+  <rect class="button-secondary" x="1090" y="695" width="80" height="25"/>
+  <text class="button-text-secondary" x="1130" y="712">图表配置</text>
+  
+  <!-- 状态栏 -->
+  <rect fill="#f3f2f1" stroke="#e1e1e1" stroke-width="1" x="0" y="770" width="1200" height="30"/>
+  <text class="status-text" x="20" y="787">状态: 图表已生成 | 显示25N目标力值时间序列</text>
+  <text class="status-text" x="1100" y="787">v1.0.0</text>
+</svg> 

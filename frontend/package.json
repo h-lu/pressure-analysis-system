@@ -1,35 +1,52 @@
 {
   "name": "pressure-analysis-frontend",
   "version": "1.0.0",
-  "description": "压力采集数据分析系统前端",
+  "description": "压力采集数据分析系统前端应用",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "lint": "eslint . --fix",
+    "serve": "vite preview",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "axios": "^1.6.2",
-    "echarts": "^5.4.3",
-    "element-plus": "^2.4.4",
-    "markdown-it": "^14.1.0",
-    "pinia": "^2.1.7",
-    "vue": "^3.3.8",
-    "vue-echarts": "^6.6.1",
-    "vue-router": "^4.2.5"
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.9.0",
+    "echarts": "^5.6.0",
+    "element-plus": "^2.10.1",
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-echarts": "^7.0.3",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.5.0",
-    "@vue/test-utils": "^2.4.3",
-    "vite": "^5.0.0",
-    "vitest": "^1.0.0"
+    "@eslint/js": "^9.22.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "eslint": "^9.22.0",
+    "eslint-plugin-vue": "~10.0.0",
+    "globals": "^16.0.0",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2"
   },
   "keywords": [
     "pressure-analysis",
-    "vue",
-    "data-visualization"
+    "data-analysis",
+    "vue3",
+    "element-plus",
+    "echarts",
+    "statistical-analysis"
   ],
   "author": "Pressure Analysis Team",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/pressure-analysis-system.git"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
 }

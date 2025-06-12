@@ -4,6 +4,7 @@
 from pydantic_settings import BaseSettings
 from typing import List
 import os
+from pathlib import Path
 
 class Settings(BaseSettings):
     """应用设置"""
@@ -32,15 +33,23 @@ class Settings(BaseSettings):
         "*"  # 生产环境允许所有源(Docker容器中)
     ]
     
-    # 文件上传配置
-    UPLOAD_DIR: str = "backend/uploads"
+    # 基础路径
+    BASE_DIR: str = str(Path(__file__).parent.parent.parent)
+    
+    # R环境配置 - 请根据您的R安装路径修改
+    # 通常在macOS上是 /usr/local/bin/R, 在Windows上可能是 C:\\Program Files\\R\\R-4.x.x\\bin\\x64
+    R_HOME: str = "/usr/local/bin"
+    
+    # 文件上传和处理目录 - 统一存放在 backend/output 目录下
+    UPLOAD_DIR: str = os.path.join(BASE_DIR, "backend", "uploads")
+    CHARTS_DIR: str = os.path.join(BASE_DIR, "backend", "output", "charts")
+    REPORTS_DIR: str = os.path.join(BASE_DIR, "backend", "output", "reports")
+    HISTORY_DIR: str = os.path.join(BASE_DIR, "backend", "output", "history")
     MAX_FILE_SIZE: int = 100 * 1024 * 1024  # 100MB
     ALLOWED_EXTENSIONS: List[str] = [".csv"]
     
     # 静态文件配置
     STATIC_DIR: str = "backend/static"
-    CHARTS_DIR: str = "backend/static/charts"
-    REPORTS_DIR: str = "backend/static/reports"
     
     # R分析配置
     R_SCRIPT_PATH: str = "backend/r_analysis/pressure_analysis.R"
@@ -48,8 +57,8 @@ class Settings(BaseSettings):
     
     # 分析参数默认值
     DEFAULT_TARGET_FORCES: List[float] = [5.0, 25.0, 50.0]
-    DEFAULT_TOLERANCE_ABS: float = 2.0
-    DEFAULT_TOLERANCE_PCT: float = 5.0
+    DEFAULT_TOLERANCE_ABS: List[float] = [0.5, 1.0, 2.0]
+    DEFAULT_TOLERANCE_PCT: List[float] = [5.0, 4.0, 3.0]
     
     # 任务管理
     TASK_TIMEOUT: int = 300  # 5分钟
@@ -58,7 +67,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # DeepSeek API配置
-    DEEPSEEK_API_KEY: str = "your_deepseek_api_key_here"
+    DEEPSEEK_API_KEY: str = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
     DEEPSEEK_MODEL: str = "deepseek-chat"
     
@@ -81,6 +90,7 @@ def ensure_directories():
         settings.STATIC_DIR,
         settings.CHARTS_DIR,
         settings.REPORTS_DIR,
+        settings.HISTORY_DIR,
         settings.R_WORKING_DIR
     ]
     

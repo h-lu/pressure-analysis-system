@@ -1,0 +1,507 @@
+{
+  "data_summary": [
+    {
+      "总行数": 20,
+      "缺失值": 0,
+      "重复行": 0,
+      "力值最小值": 4.7,
+      "力值最大值": 50.3,
+      "力值均值": 24.51,
+      "力值标准差": 19.1148,
+      "负值数量": 0,
+      "零值数量": 0
+    }
+  ],
+  "overall_stats": [
+    {
+      "样本数": 20,
+      "均值": 24.51,
+      "中位数": 24.85,
+      "标准差": 19.115,
+      "最小值": 4.7,
+      "最大值": 50.3,
+      "Q25": 5.1,
+      "Q75": 49.725,
+      "变异系数": 77.988
+    }
+  ],
+  "target_analysis": [
+    {
+      "target_force": 5,
+      "数据点数": 8,
+      "成功率_综合": 75,
+      "成功率_绝对": 100,
+      "成功率_百分比": 75,
+      "平均力值": 5.01,
+      "平均偏差_绝对": 0.01,
+      "平均偏差_百分比": 0.25,
+      "标准差": 0.2,
+      "最大偏差_绝对": 0.3,
+      "最大偏差_百分比": 6,
+      "绝对容差限制": 2,
+      "百分比容差限制": 0.25
+    },
+    {
+      "target_force": 25,
+      "数据点数": 6,
+      "成功率_综合": 100,
+      "成功率_绝对": 100,
+      "成功率_百分比": 100,
+      "平均力值": 25.02,
+      "平均偏差_绝对": 0.02,
+      "平均偏差_百分比": 0.07,
+      "标准差": 0.26,
+      "最大偏差_绝对": 0.4,
+      "最大偏差_百分比": 1.6,
+      "绝对容差限制": 2,
+      "百分比容差限制": 1.25
+    },
+    {
+      "target_force": 50,
+      "数据点数": 6,
+      "成功率_综合": 100,
+      "成功率_绝对": 100,
+      "成功率_百分比": 100,
+      "平均力值": 50,
+      "平均偏差_绝对": 0,
+      "平均偏差_百分比": 0,
+      "标准差": 0.24,
+      "最大偏差_绝对": 0.3,
+      "最大偏差_百分比": 0.6,
+      "绝对容差限制": 2,
+      "百分比容差限制": 2.5
+    }
+  ],
+  "trend_stats": [
+    {
+      "分组": "整体",
+      "斜率": 0.2253,
+      "截距": 22.1447,
+      "R平方": 0.0049,
+      "p值": 0.7702
+    },
+    {
+      "分组": "目标5N",
+      "斜率": -0.0018,
+      "截距": 5.0314,
+      "R平方": 0.004,
+      "p值": 0.8811
+    },
+    {
+      "分组": "目标25N",
+      "斜率": 0.0045,
+      "截距": 24.9742,
+      "R平方": 0.0083,
+      "p值": 0.8634
+    },
+    {
+      "分组": "目标50N",
+      "斜率": -0.0007,
+      "截距": 50.0079,
+      "R平方": 0.0002,
+      "p值": 0.9765
+    }
+  ],
+  "outlier_summary": [
+    {
+      "target_force": 5,
+      "总数据点": 8,
+      "IQR异常值": 0,
+      "Z异常值": 0,
+      "IQR异常率": 0,
+      "Z异常率": 0
+    },
+    {
+      "target_force": 25,
+      "总数据点": 6,
+      "IQR异常值": 0,
+      "Z异常值": 0,
+      "IQR异常率": 0,
+      "Z异常率": 0
+    },
+    {
+      "target_force": 50,
+      "总数据点": 6,
+      "IQR异常值": 0,
+      "Z异常值": 0,
+      "IQR异常率": 0,
+      "Z异常率": 0
+    }
+  ],
+  "stability_analysis": [
+    {
+      "target_force": 5,
+      "总游程数": 7,
+      "平均游程长度": 1.14,
+      "最长游程": 2,
+      "游程长度标准差": 0.38
+    },
+    {
+      "target_force": 25,
+      "总游程数": 5,
+      "平均游程长度": 1.2,
+      "最长游程": 2,
+      "游程长度标准差": 0.45
+    },
+    {
+      "target_force": 50,
+      "总游程数": 5,
+      "平均游程长度": 1.2,
+      "最长游程": 2,
+      "游程长度标准差": 0.45
+    }
+  ],
+  "change_point_analysis": [
+    {
+      "target_force": 5,
+      "潜在变化点数量": 0,
+      "最大均值变化": 0
+    },
+    {
+      "target_force": 25,
+      "潜在变化点数量": 0,
+      "最大均值变化": 0
+    },
+    {
+      "target_force": 50,
+      "潜在变化点数量": 0,
+      "最大均值变化": 0
+    }
+  ],
+  "autocorr_analysis": [
+    {
+      "target_force": 5,
+      "lag1_correlation": -0.75,
+      "lag2_correlation": 0.3064,
+      "lag3_correlation": 0.1902
+    },
+    {
+      "target_force": 25,
+      "lag1_correlation": -0.7212,
+      "lag2_correlation": -0.1834,
+      "lag3_correlation": 0.5329
+    },
+    {
+      "target_force": 50,
+      "lag1_correlation": -0.5775,
+      "lag2_correlation": -0.3412,
+      "lag3_correlation": 0.9737
+    }
+  ],
+  "process_capability": [
+    {
+      "target_force": 5,
+      "Cp": 3.333,
+      "Cpk": 3.317,
+      "能力等级": "优秀"
+    },
+    {
+      "target_force": 25,
+      "Cp": 2.564,
+      "Cpk": 2.538,
+      "能力等级": "优秀"
+    },
+    {
+      "target_force": 50,
+      "Cp": 2.778,
+      "Cpk": 2.778,
+      "能力等级": "优秀"
+    }
+  ],
+  "spatial_analysis": {
+    "error_heatmap_data": [
+      {
+        "target_force": 5,
+        "heatmap_points": [
+          {
+            "x": 98.2,
+            "y": 101.5,
+            "z": 99.8,
+            "error_value": 0.1
+          },
+          {
+            "x": 99.1,
+            "y": 100.2,
+            "z": 100.3,
+            "error_value": 0.1
+          },
+          {
+            "x": 98.5,
+            "y": 100.4,
+            "z": 99.7,
+            "error_value": 0.3
+          },
+          {
+            "x": 99.7,
+            "y": 101.1,
+            "z": 100.5,
+            "error_value": 0.3
+          },
+          {
+            "x": 98.8,
+            "y": 100.9,
+            "z": 99.9,
+            "error_value": 0.2
+          },
+          {
+            "x": 99.4,
+            "y": 100.1,
+            "z": 100.7,
+            "error_value": 0
+          },
+          {
+            "x": 98.7,
+            "y": 99.8,
+            "z": 100.4,
+            "error_value": 0.2
+          },
+          {
+            "x": 99.6,
+            "y": 100.3,
+            "z": 101,
+            "error_value": 0.1
+          }
+        ],
+        "point_count": 8
+      },
+      {
+        "target_force": 25,
+        "heatmap_points": [
+          {
+            "x": 100.5,
+            "y": 99.8,
+            "z": 101.1,
+            "error_value": 0.2
+          },
+          {
+            "x": 101.2,
+            "y": 100.7,
+            "z": 99.5,
+            "error_value": 0.2
+          },
+          {
+            "x": 100.8,
+            "y": 99.6,
+            "z": 101.2,
+            "error_value": 0.1
+          },
+          {
+            "x": 101.5,
+            "y": 100.8,
+            "z": 99.3,
+            "error_value": 0.1
+          },
+          {
+            "x": 100.2,
+            "y": 101.4,
+            "z": 99.8,
+            "error_value": 0.3
+          },
+          {
+            "x": 101.1,
+            "y": 99.7,
+            "z": 101.3,
+            "error_value": 0.4
+          }
+        ],
+        "point_count": 6
+      },
+      {
+        "target_force": 50,
+        "heatmap_points": [
+          {
+            "x": 99.8,
+            "y": 101.3,
+            "z": 100.2,
+            "error_value": 0.2
+          },
+          {
+            "x": 100.1,
+            "y": 99.9,
+            "z": 100.8,
+            "error_value": 0.3
+          },
+          {
+            "x": 99.3,
+            "y": 101.7,
+            "z": 100.6,
+            "error_value": 0.1
+          },
+          {
+            "x": 100.6,
+            "y": 99.2,
+            "z": 100.9,
+            "error_value": 0.3
+          },
+          {
+            "x": 99.9,
+            "y": 100.6,
+            "z": 100.1,
+            "error_value": 0.2
+          },
+          {
+            "x": 100.3,
+            "y": 101.2,
+            "z": 99.6,
+            "error_value": 0.1
+          }
+        ],
+        "point_count": 6
+      }
+    ],
+    "spatial_correlation": [
+      {
+        "target_force": 5,
+        "error_vs_x": -0.1247,
+        "error_vs_y": 0.2145,
+        "error_vs_z": -0.4227,
+        "n_points": 8
+      },
+      {
+        "target_force": 25,
+        "error_vs_x": -0.2796,
+        "error_vs_y": 0.0155,
+        "error_vs_z": 0.2824,
+        "n_points": 6
+      },
+      {
+        "target_force": 50,
+        "error_vs_x": 0.55,
+        "error_vs_y": -0.8962,
+        "error_vs_z": 0.6809,
+        "n_points": 6
+      }
+    ]
+  },
+  "error_distribution_analysis": {
+    "normality_tests": [
+      {
+        "target_force": 5,
+        "n_points": 8,
+        "shapiro_p_value": 0.3657,
+        "mean_error": 0.1625,
+        "std_error": 0.1061,
+        "skewness": 0.0295,
+        "kurtosis": -1.5561,
+        "is_normal": true
+      },
+      {
+        "target_force": 25,
+        "n_points": 6,
+        "shapiro_p_value": 0.4207,
+        "mean_error": 0.2167,
+        "std_error": 0.1169,
+        "skewness": 0.3709,
+        "kurtosis": -1.6181,
+        "is_normal": true
+      },
+      {
+        "target_force": 50,
+        "n_points": 6,
+        "shapiro_p_value": 0.167,
+        "mean_error": 0.2,
+        "std_error": 0.0894,
+        "skewness": 0,
+        "kurtosis": -1.9583,
+        "is_normal": true
+      }
+    ]
+  },
+  "multi_source_variation_analysis": {
+    "performance_by_position": [
+      {
+        "position_group": "位置区域-A(X<100, Y<100)",
+        "target_force": 5,
+        "数据点数": 1,
+        "成功率": 100,
+        "平均误差": 0.2,
+        "最大误差": 0.2,
+        "平均力值": 4.8
+      },
+      {
+        "position_group": "位置区域-B(X>=100, Y<100)",
+        "target_force": 25,
+        "数据点数": 3,
+        "成功率": 100,
+        "平均误差": 0.233,
+        "误差标准差": 0.153,
+        "最大误差": 0.4,
+        "平均力值": 25.23
+      },
+      {
+        "position_group": "位置区域-B(X>=100, Y<100)",
+        "target_force": 50,
+        "数据点数": 2,
+        "成功率": 100,
+        "平均误差": 0.3,
+        "误差标准差": 0,
+        "最大误差": 0.3,
+        "平均力值": 50
+      },
+      {
+        "position_group": "位置区域-C(X<100, Y>=100)",
+        "target_force": 5,
+        "数据点数": 7,
+        "成功率": 71.43,
+        "平均误差": 0.157,
+        "误差标准差": 0.113,
+        "最大误差": 0.3,
+        "平均力值": 5.04
+      },
+      {
+        "position_group": "位置区域-C(X<100, Y>=100)",
+        "target_force": 50,
+        "数据点数": 3,
+        "成功率": 100,
+        "平均误差": 0.167,
+        "误差标准差": 0.058,
+        "最大误差": 0.2,
+        "平均力值": 50.03
+      },
+      {
+        "position_group": "位置区域-D(X>=100, Y>=100)",
+        "target_force": 25,
+        "数据点数": 3,
+        "成功率": 100,
+        "平均误差": 0.2,
+        "误差标准差": 0.1,
+        "最大误差": 0.3,
+        "平均力值": 24.8
+      },
+      {
+        "position_group": "位置区域-D(X>=100, Y>=100)",
+        "target_force": 50,
+        "数据点数": 1,
+        "成功率": 100,
+        "平均误差": 0.1,
+        "最大误差": 0.1,
+        "平均力值": 49.9
+      }
+    ],
+    "robot_consistency_analysis": {
+      "force_repeatability": [
+        4.05,
+        1.06,
+        0.47
+      ],
+      "position_accuracy": {
+        "x_std": 0.9,
+        "y_std": 0.7,
+        "z_std": 0.6
+      }
+    },
+    "anova_results": {}
+  },
+  "summary": {
+    "total_records": 20,
+    "success_rate": 90,
+    "mean_force": 24.51,
+    "std_force": 19.11,
+    "cv_percent": 77.99,
+    "analysis_complete": true,
+    "spatial_analysis_enabled": true,
+    "error_distribution_analysis_enabled": true,
+    "multi_source_analysis_enabled": true,
+    "test_positions": 4
+  }
+}

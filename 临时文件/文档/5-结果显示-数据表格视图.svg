@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- 全局样式 -->
+  <defs>
+    <style>
+      .window-bg { fill: #fafafa; }
+      .titlebar { fill: #e5e5e5; }
+      .menu-bg { fill: #f3f3f3; }
+      .panel-bg { fill: #ffffff; }
+      .border { stroke: #d1d1d1; stroke-width: 1; fill: none; }
+      .primary-bg { fill: #0078d4; }
+      .primary-text { fill: #ffffff; font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+      .header-text { font-family: 'Segoe UI', sans-serif; font-size: 16px; font-weight: 600; fill: #323130; }
+      .body-text { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #323130; }
+      .small-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #605e5c; }
+      .table-header { fill: #f8f9fa; stroke: #d1d1d1; stroke-width: 1; }
+      .table-cell { fill: #ffffff; stroke: #e1e1e1; stroke-width: 0.5; }
+      .table-header-text { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; fill: #323130; }
+      .table-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #323130; }
+      .status-good { fill: #107c10; }
+      .status-warning { fill: #ff8c00; }
+      .status-error { fill: #d13438; }
+      .btn-secondary { fill: #f3f2f1; stroke: #8a8886; stroke-width: 1; }
+      .btn-secondary-text { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #323130; }
+    </style>
+  </defs>
+
+  <!-- 主窗口背景 -->
+  <rect width="1200" height="800" class="window-bg"/>
+
+  <!-- 标题栏 -->
+  <rect width="1200" height="32" class="titlebar"/>
+  <rect width="1200" height="32" class="border"/>
+  <text x="16" y="21" class="body-text">压力采集数据分析仪 - 详细数据</text>
+  
+  <!-- 窗口控制按钮 -->
+  <rect x="1130" y="6" width="20" height="20" rx="2" class="btn-secondary"/>
+  <text x="1137" y="18" class="small-text">-</text>
+  <rect x="1154" y="6" width="20" height="20" rx="2" class="btn-secondary"/>
+  <text x="1161" y="18" class="small-text">□</text>
+  <rect x="1178" y="6" width="20" height="20" rx="2" fill="#e81123"/>
+  <text x="1185" y="18" fill="white" class="small-text">×</text>
+
+  <!-- 菜单栏 -->
+  <rect y="32" width="1200" height="32" class="menu-bg"/>
+  <rect y="32" width="1200" height="32" class="border"/>
+  <text x="16" y="51" class="body-text">文件</text>
+  <text x="60" y="51" class="body-text">设置</text>
+  <text x="104" y="51" class="body-text">帮助</text>
+
+  <!-- 工具栏 -->
+  <rect y="64" width="1200" height="40" class="panel-bg"/>
+  <rect y="64" width="1200" height="40" class="border"/>
+  <rect x="16" y="72" width="32" height="24" rx="4" class="btn-secondary"/>
+  <text x="28" y="86" class="small-text">📁</text>
+  <text x="56" y="86" class="body-text">加载CSV</text>
+  
+  <rect x="160" y="72" width="32" height="24" rx="4" class="primary-bg"/>
+  <text x="172" y="86" class="primary-text">▶</text>
+  <text x="200" y="86" class="body-text">运行分析</text>
+
+  <!-- 主内容区域 -->
+  <rect y="104" width="1200" height="696" class="panel-bg"/>
+  <rect y="104" width="1200" height="696" class="border"/>
+
+  <!-- 标签页选项卡 -->
+  <rect x="20" y="120" width="120" height="32" rx="6" fill="#f3f2f1" stroke="#d1d1d1" stroke-width="1"/>
+  <text x="80" y="138" text-anchor="middle" class="body-text">摘要统计</text>
+  
+  <rect x="140" y="120" width="120" height="32" rx="6" fill="#f3f2f1" stroke="#d1d1d1" stroke-width="1"/>
+  <text x="200" y="138" text-anchor="middle" class="body-text">图表视图</text>
+  
+  <rect x="260" y="120" width="120" height="32" rx="6" class="primary-bg"/>
+  <text x="320" y="138" text-anchor="middle" class="primary-text">详细数据</text>
+
+  <!-- 工具栏区域 -->
+  <rect x="20" y="168" width="1160" height="40" class="menu-bg"/>
+  <rect x="20" y="168" width="1160" height="40" class="border"/>
+  
+  <!-- 过滤器 -->
+  <text x="32" y="185" class="body-text">筛选:</text>
+  <rect x="80" y="176" width="120" height="24" rx="4" class="panel-bg" stroke="#d1d1d1" stroke-width="1"/>
+  <text x="88" y="190" class="small-text">全部目标力值</text>
+  <text x="185" y="190" class="small-text">▼</text>
+  
+  <rect x="220" y="176" width="100" height="24" rx="4" class="panel-bg" stroke="#d1d1d1" stroke-width="1"/>
+  <text x="228" y="190" class="small-text">全部状态</text>
+  <text x="305" y="190" class="small-text">▼</text>
+  
+  <!-- 导出按钮 -->
+  <rect x="1000" y="176" width="80" height="24" rx="4" class="btn-secondary"/>
+  <text x="1032" y="190" class="btn-secondary-text">导出CSV</text>
+  
+  <rect x="1090" y="176" width="80" height="24" rx="4" class="primary-bg"/>
+  <text x="1122" y="190" class="primary-text">导出报告</text>
+
+  <!-- 数据表格 -->
+  <g id="data-table">
+    <!-- 表格容器 -->
+    <rect x="20" y="220" width="1160" height="520" class="panel-bg" stroke="#d1d1d1" stroke-width="1"/>
+    
+    <!-- 表头 -->
+    <rect x="20" y="220" width="1160" height="32" class="table-header"/>
+    
+    <!-- 表头列 -->
+    <line x1="80" y1="220" x2="80" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="140" y1="220" x2="140" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="200" y1="220" x2="200" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="260" y1="220" x2="260" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="340" y1="220" x2="340" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="440" y1="220" x2="440" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="540" y1="220" x2="540" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="640" y1="220" x2="640" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="720" y1="220" x2="720" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="820" y1="220" x2="820" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="920" y1="220" x2="920" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    <line x1="1020" y1="220" x2="1020" y2="252" stroke="#d1d1d1" stroke-width="1"/>
+    
+    <!-- 表头文本 -->
+    <text x="50" y="238" text-anchor="middle" class="table-header-text">序号</text>
+    <text x="110" y="238" text-anchor="middle" class="table-header-text">X(mm)</text>
+    <text x="170" y="238" text-anchor="middle" class="table-header-text">Y(mm)</text>
+    <text x="230" y="238" text-anchor="middle" class="table-header-text">Z(mm)</text>
+    <text x="300" y="238" text-anchor="middle" class="table-header-text">力值(N)</text>
+    <text x="390" y="238" text-anchor="middle" class="table-header-text">目标力值(N)</text>
+    <text x="490" y="238" text-anchor="middle" class="table-header-text">偏差(N)</text>
+    <text x="590" y="238" text-anchor="middle" class="table-header-text">偏差(%)</text>
+    <text x="680" y="238" text-anchor="middle" class="table-header-text">在容差内</text>
+    <text x="770" y="238" text-anchor="middle" class="table-header-text">异常值</text>
+    <text x="870" y="238" text-anchor="middle" class="table-header-text">时间戳</text>
+    <text x="970" y="238" text-anchor="middle" class="table-header-text">状态</text>
+    <text x="1100" y="238" text-anchor="middle" class="table-header-text">备注</text>
+    
+    <!-- 数据行 -->
+    <!-- 第1行 -->
+    <rect x="20" y="252" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="276" x2="1180" y2="276" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="266" text-anchor="middle" class="table-text">1</text>
+    <text x="110" y="266" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="266" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="266" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="266" text-anchor="middle" class="table-text">25.12</text>
+    <text x="390" y="266" text-anchor="middle" class="table-text">25.00</text>
+    <text x="490" y="266" text-anchor="middle" class="table-text">0.12</text>
+    <text x="590" y="266" text-anchor="middle" class="table-text">0.48%</text>
+    <text x="680" y="266" text-anchor="middle" class="status-good table-text">✓</text>
+    <text x="770" y="266" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="266" text-anchor="middle" class="table-text">14:30:15</text>
+    <text x="970" y="266" text-anchor="middle" class="status-good table-text">正常</text>
+    <text x="1100" y="266" text-anchor="middle" class="table-text">-</text>
+    
+    <!-- 第2行 -->
+    <rect x="20" y="276" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="300" x2="1180" y2="300" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="290" text-anchor="middle" class="table-text">2</text>
+    <text x="110" y="290" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="290" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="290" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="290" text-anchor="middle" class="table-text">4.85</text>
+    <text x="390" y="290" text-anchor="middle" class="table-text">5.00</text>
+    <text x="490" y="290" text-anchor="middle" class="table-text">-0.15</text>
+    <text x="590" y="290" text-anchor="middle" class="table-text">-3.00%</text>
+    <text x="680" y="290" text-anchor="middle" class="status-good table-text">✓</text>
+    <text x="770" y="290" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="290" text-anchor="middle" class="table-text">14:30:18</text>
+    <text x="970" y="290" text-anchor="middle" class="status-good table-text">正常</text>
+    <text x="1100" y="290" text-anchor="middle" class="table-text">-</text>
+    
+    <!-- 第3行 -->
+    <rect x="20" y="300" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="324" x2="1180" y2="324" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="314" text-anchor="middle" class="table-text">3</text>
+    <text x="110" y="314" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="314" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="314" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="314" text-anchor="middle" class="table-text">52.34</text>
+    <text x="390" y="314" text-anchor="middle" class="table-text">50.00</text>
+    <text x="490" y="314" text-anchor="middle" class="table-text">2.34</text>
+    <text x="590" y="314" text-anchor="middle" class="table-text">4.68%</text>
+    <text x="680" y="314" text-anchor="middle" class="status-warning table-text">!</text>
+    <text x="770" y="314" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="314" text-anchor="middle" class="table-text">14:30:21</text>
+    <text x="970" y="314" text-anchor="middle" class="status-warning table-text">警告</text>
+    <text x="1100" y="314" text-anchor="middle" class="table-text">超出容差</text>
+    
+    <!-- 第4行 -->
+    <rect x="20" y="324" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="348" x2="1180" y2="348" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="338" text-anchor="middle" class="table-text">4</text>
+    <text x="110" y="338" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="338" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="338" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="338" text-anchor="middle" class="table-text">24.89</text>
+    <text x="390" y="338" text-anchor="middle" class="table-text">25.00</text>
+    <text x="490" y="338" text-anchor="middle" class="table-text">-0.11</text>
+    <text x="590" y="338" text-anchor="middle" class="table-text">-0.44%</text>
+    <text x="680" y="338" text-anchor="middle" class="status-good table-text">✓</text>
+    <text x="770" y="338" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="338" text-anchor="middle" class="table-text">14:30:24</text>
+    <text x="970" y="338" text-anchor="middle" class="status-good table-text">正常</text>
+    <text x="1100" y="338" text-anchor="middle" class="table-text">-</text>
+    
+    <!-- 第5行 -->
+    <rect x="20" y="348" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="372" x2="1180" y2="372" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="362" text-anchor="middle" class="table-text">5</text>
+    <text x="110" y="362" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="362" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="362" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="362" text-anchor="middle" class="table-text">4.97</text>
+    <text x="390" y="362" text-anchor="middle" class="table-text">5.00</text>
+    <text x="490" y="362" text-anchor="middle" class="table-text">-0.03</text>
+    <text x="590" y="362" text-anchor="middle" class="table-text">-0.60%</text>
+    <text x="680" y="362" text-anchor="middle" class="status-good table-text">✓</text>
+    <text x="770" y="362" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="362" text-anchor="middle" class="table-text">14:30:27</text>
+    <text x="970" y="362" text-anchor="middle" class="status-good table-text">正常</text>
+    <text x="1100" y="362" text-anchor="middle" class="table-text">-</text>
+    
+    <!-- 第6行 -->
+    <rect x="20" y="372" width="1160" height="24" class="table-cell"/>
+    <line x1="20" y1="396" x2="1180" y2="396" stroke="#e1e1e1" stroke-width="0.5"/>
+    <text x="50" y="386" text-anchor="middle" class="table-text">6</text>
+    <text x="110" y="386" text-anchor="middle" class="table-text">10.5</text>
+    <text x="170" y="386" text-anchor="middle" class="table-text">15.2</text>
+    <text x="230" y="386" text-anchor="middle" class="table-text">20.0</text>
+    <text x="300" y="386" text-anchor="middle" class="table-text">48.76</text>
+    <text x="390" y="386" text-anchor="middle" class="table-text">50.00</text>
+    <text x="490" y="386" text-anchor="middle" class="table-text">-1.24</text>
+    <text x="590" y="386" text-anchor="middle" class="table-text">-2.48%</text>
+    <text x="680" y="386" text-anchor="middle" class="status-good table-text">✓</text>
+    <text x="770" y="386" text-anchor="middle" class="table-text">否</text>
+    <text x="870" y="386" text-anchor="middle" class="table-text">14:30:30</text>
+    <text x="970" y="386" text-anchor="middle" class="status-good table-text">正常</text>
+    <text x="1100" y="386" text-anchor="middle" class="table-text">-</text>
+    
+    <!-- 占位符行 (表示更多数据) -->
+    <text x="600" y="450" text-anchor="middle" class="small-text">... 显示第1-6行，共1024行数据 ...</text>
+    
+    <!-- 垂直分隔线 -->
+    <line x1="80" y1="220" x2="80" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="140" y1="220" x2="140" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="200" y1="220" x2="200" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="260" y1="220" x2="260" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="340" y1="220" x2="340" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="440" y1="220" x2="440" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="540" y1="220" x2="540" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="640" y1="220" x2="640" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="720" y1="220" x2="720" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="820" y1="220" x2="820" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="920" y1="220" x2="920" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+    <line x1="1020" y1="220" x2="1020" y2="740" stroke="#e1e1e1" stroke-width="0.5"/>
+  </g>
+
+  <!-- 分页控件 -->
+  <rect x="20" y="750" width="1160" height="40" class="menu-bg"/>
+  <rect x="20" y="750" width="1160" height="40" class="border"/>
+  
+  <text x="32" y="772" class="body-text">共1024条记录</text>
+  
+  <!-- 分页按钮 -->
+  <rect x="900" y="758" width="24" height="24" rx="4" class="btn-secondary"/>
+  <text x="909" y="772" class="btn-secondary-text">‹</text>
+  
+  <rect x="932" y="758" width="24" height="24" rx="4" class="primary-bg"/>
+  <text x="941" y="772" class="primary-text">1</text>
+  
+  <rect x="964" y="758" width="24" height="24" rx="4" class="btn-secondary"/>
+  <text x="973" y="772" class="btn-secondary-text">2</text>
+  
+  <rect x="996" y="758" width="24" height="24" rx="4" class="btn-secondary"/>
+  <text x="1005" y="772" class="btn-secondary-text">3</text>
+  
+  <text x="1028" y="772" class="body-text">...</text>
+  
+  <rect x="1050" y="758" width="24" height="24" rx="4" class="btn-secondary"/>
+  <text x="1056" y="772" class="btn-secondary-text">43</text>
+  
+  <rect x="1082" y="758" width="24" height="24" rx="4" class="btn-secondary"/>
+  <text x="1091" y="772" class="btn-secondary-text">›</text>
+  
+  <text x="1120" y="772" class="body-text">每页25条</text>
+
+  <!-- 状态栏 -->
+  <rect y="800" width="1200" height="20" class="titlebar"/>
+  <text x="16" y="813" class="small-text">数据已加载 | 共1024个测量点 | 正常: 987, 警告: 32, 错误: 5</text>
+</svg> 

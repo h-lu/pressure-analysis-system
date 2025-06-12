@@ -1,0 +1,100 @@
+/* 目标力值配置样式 */
+.target-forces-config {
+  width: 100%;
+}
+
+.force-config-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background-color: var(--el-bg-color-page);
+  border-radius: 6px;
+  border: 1px solid var(--el-border-color-lighter);
+  transition: all 0.3s ease;
+}
+
+.force-config-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.force-input {
+  flex: 1;
+}
+
+.tolerance-input {
+  flex: 1;
+}
+
+.config-preview {
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: var(--el-fill-color-lighter);
+  border-radius: 6px;
+  border-left: 3px solid var(--el-color-primary);
+}
+
+.preview-title {
+  margin-bottom: 8px;
+  color: var(--el-color-primary);
+  font-weight: 600;
+}
+
+.preview-range {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  margin-top: 4px;
+}
+
+/* 进度详情样式 */
+.progress-details {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: var(--el-bg-color-page);
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.progress-details p {
+  margin: 4px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-details strong {
+  color: var(--el-color-primary);
+}
+
+/* 目标结果表格区域 */
+.target-results {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: var(--el-bg-color-page);
+  border-radius: 8px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.target-results h4 {
+  margin-bottom: 12px;
+  color: var(--el-color-primary);
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+  .force-config-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .force-input,
+  .tolerance-input {
+    width: 100%;
+  }
+  
+  .progress-details p {
+    flex-direction: column;
+    gap: 4px;
+  }
+} 

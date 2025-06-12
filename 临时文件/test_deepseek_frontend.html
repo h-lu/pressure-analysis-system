@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek AI分析报告 - 测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            background: #fafafa;
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #f0f4ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .report-type-selector {
+            margin: 20px 0;
+        }
+
+        .report-type-selector label {
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .report-type-selector input[type="radio"] {
+            margin-right: 8px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .result h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8edff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: inline-block;
+            margin: 5px 15px 5px 0;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        .report-content {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            max-height: 600px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            color: #c62828;
+        }
+
+        .success {
+            background: #e8f5e8;
+            border-left: 5px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 15px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-connected {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-connected .status-indicator {
+            background: #4caf50;
+        }
+
+        .status-disconnected {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-disconnected .status-indicator {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 DeepSeek AI 分析报告</h1>
+            <p>智能压力数据分析系统 - 测试界面</p>
+            <span id="connectionStatus" class="connection-status">
+                <span class="status-indicator"></span>
+                检测连接中...
+            </span>
+        </div>
+
+        <div class="content">
+            <!-- 连接测试 -->
+            <div class="test-section">
+                <h2>🔗 连接测试</h2>
+                <p>首先测试与DeepSeek API的连接状态</p>
+                <div class="test-buttons">
+                    <button class="btn" onclick="testConnection()">测试连接</button>
+                </div>
+                <div id="connectionResult"></div>
+            </div>
+
+            <!-- 文件上传分析 -->
+            <div class="test-section">
+                <h2>📂 文件上传分析</h2>
+                <p>上传analysis_results.json文件，AI将自动生成详细的分析报告</p>
+                
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">点击选择文件或拖拽到此处</div>
+                    <div style="color: #999; font-size: 0.9em;">支持：analysis_results.json</div>
+                    <input type="file" id="fileInput" class="file-input" accept=".json" onchange="handleFileSelect(event)">
+                </div>
+
+                <div class="report-type-selector">
+                    <label><input type="radio" name="reportType" value="summary" checked> 简明摘要</label>
+                    <label><input type="radio" name="reportType" value="comprehensive"> 综合分析</label>
+                    <label><input type="radio" name="reportType" value="technical"> 技术详细</label>
+                </div>
+
+                <div class="test-buttons">
+                    <button class="btn" onclick="uploadAndAnalyze()" disabled id="analyzeBtn">开始分析</button>
+                    <button class="btn" onclick="clearResults()">清除结果</button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>AI正在分析中，请稍候...</p>
+                </div>
+
+                <div id="analysisResult"></div>
+            </div>
+
+            <!-- 使用示例数据测试 -->
+            <div class="test-section">
+                <h2>🧪 使用示例数据</h2>
+                <p>使用内置的示例数据快速测试各种报告类型</p>
+                <div class="test-buttons">
+                    <button class="btn" onclick="testWithSampleData('summary')">生成摘要报告</button>
+                    <button class="btn" onclick="testWithSampleData('comprehensive')">生成综合报告</button>
+                    <button class="btn" onclick="testWithSampleData('technical')">生成技术报告</button>
+                </div>
+                <div id="sampleResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        const API_BASE = 'http://localhost:8000/api/deepseek';
+
+        // 页面加载时自动测试连接
+        window.onload = function() {
+            testConnection();
+            setupDragAndDrop();
+        };
+
+        // 设置拖拽上传
+        function setupDragAndDrop() {
+            const uploadArea = document.querySelector('.upload-area');
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+        }
+
+        // 测试连接
+        async function testConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            const resultEl = document.getElementById('connectionResult');
+            
+            statusEl.innerHTML = '<span class="status-indicator"></span>连接测试中...';
+            statusEl.className = 'connection-status';
+
+            try {
+                const response = await fetch(`${API_BASE}/test-connection`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusEl.innerHTML = '<span class="status-indicator"></span>连接正常';
+                    statusEl.className = 'connection-status status-connected';
+                    
+                    resultEl.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ 连接测试成功</h3>
+                            <p><strong>响应:</strong> ${data.response}</p>
+                            <p><strong>消息:</strong> ${data.message}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.detail || '连接失败');
+                }
+            } catch (error) {
+                statusEl.innerHTML = '<span class="status-indicator"></span>连接失败';
+                statusEl.className = 'connection-status status-disconnected';
+                
+                resultEl.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ 连接测试失败</h3>
+                        <p><strong>错误:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 文件选择处理
+        function handleFileSelect(event) {
+            handleFile(event.target.files[0]);
+        }
+
+        function handleFile(file) {
+            if (file && file.name.endsWith('.json')) {
+                selectedFile = file;
+                document.getElementById('analyzeBtn').disabled = false;
+                
+                const uploadArea = document.querySelector('.upload-area');
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">✅</div>
+                    <div class="upload-text">已选择文件: ${file.name}</div>
+                    <div style="color: #999; font-size: 0.9em;">大小: ${(file.size / 1024).toFixed(1)} KB</div>
+                `;
+            } else {
+                alert('请选择JSON格式的分析结果文件');
+            }
+        }
+
+        // 上传并分析
+        async function uploadAndAnalyze() {
+            if (!selectedFile) {
+                alert('请先选择文件');
+                return;
+            }
+
+            const reportType = document.querySelector('input[name="reportType"]:checked').value;
+            const loadingEl = document.getElementById('loading');
+            const resultEl = document.getElementById('analysisResult');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            loadingEl.style.display = 'block';
+            analyzeBtn.disabled = true;
+            resultEl.innerHTML = '';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch(`${API_BASE}/analyze-from-file`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResult(data, resultEl, '文件分析');
+                } else {
+                    throw new Error(data.detail || '分析失败');
+                }
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ 分析失败</h3>
+                        <p><strong>错误:</strong> ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                loadingEl.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        // 使用示例数据测试
+        async function testWithSampleData(reportType) {
+            const resultEl = document.getElementById('sampleResult');
+            resultEl.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>正在生成报告...</p></div>';
+
+            try {
+                // 获取示例数据
+                const sampleDataResponse = await fetch('/static/charts/test_new_analysis_features/analysis_results.json');
+                const sampleData = await sampleDataResponse.json();
+
+                const requestData = {
+                    analysis_data: sampleData,
+                    report_type: reportType,
+                    language: 'chinese'
+                };
+
+                const response = await fetch(`${API_BASE}/generate-report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResult(data, resultEl, `示例数据分析 (${reportType})`);
+                } else {
+                    throw new Error(data.detail || '分析失败');
+                }
+            } catch (error) {
+                resultEl.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ 示例分析失败</h3>
+                        <p><strong>错误:</strong> ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 显示结果
+        function displayResult(data, containerEl, title) {
+            const summary = data.analysis_summary || {};
+            const summaryItems = Object.entries(summary).map(([key, value]) => 
+                `<span class="summary-item"><strong>${key}:</strong> ${value}</span>`
+            ).join('');
+
+            containerEl.innerHTML = `
+                <div class="result success">
+                    <h3>✅ ${title}成功</h3>
+                    <p><strong>消息:</strong> ${data.message}</p>
+                    
+                    <div class="summary-box">
+                        <h4>📊 分析摘要</h4>
+                        ${summaryItems}
+                    </div>
+                    
+                    <h4>📄 完整报告</h4>
+                    <div class="report-content">${data.report}</div>
+                    
+                    <div style="margin-top: 15px;">
+                        <button class="btn" onclick="downloadReport('${encodeURIComponent(data.report)}', '${title}')">下载报告</button>
+                        <button class="btn" onclick="copyToClipboard('${encodeURIComponent(data.report)}')">复制到剪贴板</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 下载报告
+        function downloadReport(encodedReport, title) {
+            const report = decodeURIComponent(encodedReport);
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 复制到剪贴板
+        function copyToClipboard(encodedReport) {
+            const report = decodeURIComponent(encodedReport);
+            navigator.clipboard.writeText(report).then(() => {
+                alert('报告已复制到剪贴板');
+            }).catch(() => {
+                alert('复制失败，请手动选择文本');
+            });
+        }
+
+        // 清除结果
+        function clearResults() {
+            document.getElementById('analysisResult').innerHTML = '';
+            document.getElementById('sampleResult').innerHTML = '';
+            selectedFile = null;
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            const uploadArea = document.querySelector('.upload-area');
+            uploadArea.innerHTML = `
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">点击选择文件或拖拽到此处</div>
+                <div style="color: #999; font-size: 0.9em;">支持：analysis_results.json</div>
+                <input type="file" id="fileInput" class="file-input" accept=".json" onchange="handleFileSelect(event)">
+            `;
+        }
+    </script>
+</body>
+</html> 
