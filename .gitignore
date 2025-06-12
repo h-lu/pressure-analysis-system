@@ -123,3 +123,7 @@ ipython_config.py
 .env.development.local
 .env.test.local
 .env.production.local 
+
+临时文件/
+页面设计图/
+.cursor/
