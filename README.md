@@ -78,7 +78,7 @@ Node.js >= 16.0
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/hb-lu/pressure-analysis-system.git
+git clone https://github.com/h-lu/pressure-analysis-system.git
 cd pressure-analysis-system
 ```
 

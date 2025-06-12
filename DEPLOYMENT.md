@@ -23,7 +23,7 @@
 ### 1. 代码获取
 
 ```bash
-git clone https://github.com/your-username/pressure-analysis-system.git
+git clone https://github.com/h-lus/pressure-analysis-system.git
 cd pressure-analysis-system
 ```
 
