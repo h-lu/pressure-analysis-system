@@ -29,9 +29,6 @@ options(warn = -1)  # 抑制警告信息
 # 加载必要的包
 suppressMessages({
   library(tidyverse)
-  library(readr)
-  library(ggplot2)
-  library(dplyr)
   library(slider)
   library(broom)
   library(GGally)
