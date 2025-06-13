@@ -330,17 +330,7 @@ const handleSystemThemeChange = (value) => {
   }
 }
 
-// 生成调色板
-const generateColorPalette = () => {
-  if (!customPrimary.value) {
-    ElMessage.warning('请先设置主色调')
-    return
-  }
-  
-  const palette = generateColorPalette(customPrimary.value)
-  console.log('生成的调色板:', palette)
-  ElMessage.success('调色板已生成，请查看控制台')
-}
+// 生成调色板功能已通过 useThemeUtils() 提供
 
 // 导入主题
 const handleImportTheme = async (file) => {

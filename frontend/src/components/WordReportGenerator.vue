@@ -113,7 +113,7 @@
             :disabled="!canGenerate"
             @click="generateReport"
           >
-            <el-icon><Magic /></el-icon>
+            <el-icon><MagicStick /></el-icon>
             {{ generating ? '正在生成...' : '生成Word报告' }}
           </el-button>
           
@@ -225,7 +225,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 import {
-  Document, Magic, Download, Loading, DocumentChecked, Clock
+  Document, MagicStick, Download, Loading, DocumentChecked, Clock
 } from '@element-plus/icons-vue'
 import { CHART_CATEGORIES, getAllChartNames, getChartsByCategory } from '@/utils/chartConfig'
 

@@ -1036,4 +1036,3 @@ onUnmounted(() => {
   gap: 12px;
 }
 </style> 
-</style> 

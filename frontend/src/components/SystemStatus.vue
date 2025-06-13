@@ -60,7 +60,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { Monitor, Refresh, Connection, Robot, Warning } from '@element-plus/icons-vue'
+import { Monitor, Refresh, Connection, UserFilled, Warning } from '@element-plus/icons-vue'
 import { apiClient } from '@/utils/http'
 import { useAnalysisStore } from '@/stores/analysis'
 
@@ -75,7 +75,7 @@ const backendStatus = ref({
 const aiStatus = ref({
   type: 'info', 
   text: '检测中...',
-  icon: Robot
+  icon: UserFilled
 })
 const runningTasks = ref(0)
 const memoryUsage = ref(46)
@@ -112,7 +112,7 @@ const checkAIStatus = async () => {
     aiStatus.value = {
       type: 'success',
       text: '正常',
-      icon: Robot
+      icon: UserFilled
     }
   } catch (error) {
     console.error('AI服务连接失败:', error)

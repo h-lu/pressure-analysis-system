@@ -1,0 +1,59 @@
+services:
+  # 后端API服务 (使用快速构建版本)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    container_name: pressure-backend-fast
+    restart: unless-stopped
+    environment:
+      - PYTHONPATH=/app
+      - DEBUG=false
+      - HOST=0.0.0.0
+      - PORT=8000
+      # DeepSeek AI配置通过前端系统设置页面配置，无需环境变量
+    volumes:
+      # 持久化数据目录
+      - ./data/uploads:/app/backend/uploads
+      - ./data/output:/app/backend/output
+      - ./data/logs:/app/logs
+      # R分析脚本 (如果需要热更新)
+      - ./backend/r_analysis:/app/backend/r_analysis:ro
+    ports:
+      - "8000:8000"
+    networks:
+      - pressure-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 前端Web服务 (使用快速构建版本)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    container_name: pressure-frontend-fast
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - pressure-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  pressure-network:
+    driver: bridge 

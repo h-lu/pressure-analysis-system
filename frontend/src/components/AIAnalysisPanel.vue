@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <div class="header-left">
-            <el-icon class="ai-icon"><Robot /></el-icon>
+            <el-icon class="ai-icon"><UserFilled /></el-icon>
             <span class="header-title">DeepSeek AI 智能分析</span>
           </div>
           <div class="header-right">
@@ -323,7 +323,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElNotification, ElMessageBox } from 'element-plus'
 import {
-  Robot, MagicStick, Refresh, Download, DocumentChecked,
+  UserFilled, MagicStick, Refresh, Download, DocumentChecked,
   Warning, Location, TrendCharts, Bottom, Minus, Clock
 } from '@element-plus/icons-vue'
 

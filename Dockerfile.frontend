@@ -1,0 +1,43 @@
+# 压力采集数据分析系统 - 前端Dockerfile (快速版本)
+# 构建阶段
+FROM docker.m.daocloud.io/library/node:18-alpine AS build
+
+# 设置工作目录
+WORKDIR /app
+
+# 配置npm国内镜像源
+RUN npm config set registry https://registry.npm.taobao.org/
+
+# 复制package文件（先复制这些文件以利用Docker缓存）
+COPY frontend/package*.json ./
+
+# 安装依赖（使用npm ci获得更快的安装速度）
+RUN npm ci --production=false
+
+# 复制源代码
+COPY frontend/ .
+
+# 构建应用
+RUN npm run build
+
+# 生产阶段
+FROM docker.m.daocloud.io/library/nginx:alpine
+
+# 安装curl用于健康检查
+RUN apk add --no-cache curl
+
+# 复制构建产物
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# 复制nginx配置
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 暴露端口
+EXPOSE 80
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# 启动nginx
+CMD ["nginx", "-g", "daemon off;"] 
