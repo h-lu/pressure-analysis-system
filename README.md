@@ -74,7 +74,7 @@
 
 ```bash
 # 克隆项目
-git clone <repository-url>
+git clone https://github.com/h-lu/pressure-analysis-system
 cd 压力系统
 
 # 运行部署脚本
