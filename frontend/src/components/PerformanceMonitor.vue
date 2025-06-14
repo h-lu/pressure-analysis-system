@@ -268,6 +268,7 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useMemoryMonitor } from '@/composables/useCache'
+import { getFullApiURL } from '@/config'
 
 // 监控状态
 const isMonitoring = ref(false)
@@ -455,7 +456,7 @@ const testNetworkSpeed = async () => {
     const startTime = performance.now()
     
     // 发送测试请求
-    await fetch('/api/health', { cache: 'no-cache' })
+    await fetch(getFullApiURL('/health'), { cache: 'no-cache' })
     
     const endTime = performance.now()
     const latency = Math.round(endTime - startTime)

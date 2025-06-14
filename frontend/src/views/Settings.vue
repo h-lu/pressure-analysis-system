@@ -134,8 +134,9 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { deepseekAPI } from '@/api/deepseek'
+import { getFullApiURL } from '@/config'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = getFullApiURL('')
 
 // AI配置
 const aiConfig = reactive({
@@ -221,7 +222,7 @@ const saveAIConfig = async () => {
 // 获取存储统计
 const getStorageStats = async () => {
   try {
-    const response = await fetch(`${API_BASE}/api/storage-stats`)
+    const response = await fetch(getFullApiURL('/api/storage-stats'))
     const result = await response.json()
     
     if (result.success) {
@@ -236,7 +237,7 @@ const getStorageStats = async () => {
   } catch (error) {
     console.error('获取存储统计失败:', error)
     // 使用备用数据
-    const taskResponse = await fetch(`${API_BASE}/api/tasks`)
+    const taskResponse = await fetch(getFullApiURL('/api/tasks'))
     const tasks = await taskResponse.json()
     storageStats.historyCount = tasks.tasks?.length || 0
     storageStats.chartFiles = storageStats.historyCount * 35
@@ -268,7 +269,7 @@ const getAIConfig = async () => {
 const clearCache = async () => {
   clearingCache.value = true
   try {
-    const response = await fetch(`${API_BASE}/api/clear-cache`, {
+    const response = await fetch(getFullApiURL('/api/clear-cache'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     })
@@ -340,7 +341,7 @@ const importConfig = (event) => {
 const backupData = async () => {
   backingUp.value = true
   try {
-    const response = await fetch(`${API_BASE}/api/backup-data`, {
+    const response = await fetch(getFullApiURL('/api/backup-data'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     })
@@ -364,7 +365,7 @@ const backupData = async () => {
 // 清理所有数据
 const cleanAllData = async () => {
   try {
-    const response = await fetch(`${API_BASE}/api/clear-all-data`, {
+    const response = await fetch(getFullApiURL('/api/clear-all-data'), {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     })

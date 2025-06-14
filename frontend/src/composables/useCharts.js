@@ -1,6 +1,7 @@
 import { ref, reactive, computed, watch, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { chartsAPI } from '@/api/charts'
+import { getFullApiURL } from '@/config'
 
 export function useCharts(taskId) {
   // 响应式数据
@@ -37,6 +38,11 @@ export function useCharts(taskId) {
   })
 
   // 方法
+  const getChartUrl = (chartName) => {
+    const url = getFullApiURL(`/api/chart/${taskId}/${chartName}`)
+    return `${url}?t=${Date.now()}`
+  }
+
   const loadChart = async (chartName, options = {}) => {
     if (!taskId || !chartName) {
       throw new Error('缺少必要参数')
@@ -56,7 +62,7 @@ export function useCharts(taskId) {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), timeout)
 
-      const url = `http://localhost:8000/api/chart/${taskId}/${chartName}`
+      const url = getChartUrl(chartName)
       const response = await fetch(url, { 
         signal: controller.signal,
         headers: {

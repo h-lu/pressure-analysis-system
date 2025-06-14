@@ -143,6 +143,7 @@ import {
   View,
   InfoFilled
 } from '@element-plus/icons-vue'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   chartName: {
@@ -214,7 +215,7 @@ const loadChart = async () => {
 
   try {
     // 构建图表URL
-    const url = `http://localhost:8000/api/chart/${props.taskId}/${props.chartName}`
+    const url = getFullApiURL(`/api/chart/${props.taskId}/${props.chartName}`)
     
     // 验证图表是否存在
     const response = await fetch(url, { method: 'HEAD' })

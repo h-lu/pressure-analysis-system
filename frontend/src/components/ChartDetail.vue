@@ -204,7 +204,7 @@
                 </div>
                 <div class="tech-item">
                   <label>API路径:</label>
-                  <span>/api/chart/{{ taskId }}/{{ chartName }}</span>
+                  <span>{{ getFullApiURL(`/api/chart/${taskId}/${chartName}`) }}</span>
                 </div>
                 <div class="tech-item">
                   <label>图表URL:</label>
@@ -271,6 +271,7 @@ import {
 } from '@element-plus/icons-vue'
 import ChartContainer from './ChartContainer.vue'
 import { chartCategories } from '@/config/chartConfig'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   chartName: {
@@ -344,7 +345,7 @@ const categoryColor = computed(() => {
 })
 
 const chartUrl = computed(() => {
-  return `http://localhost:8000/api/chart/${props.taskId}/${props.chartName}`
+  return getFullApiURL(`/api/chart/${props.taskId}/${props.chartName}`)
 })
 
 // 方法

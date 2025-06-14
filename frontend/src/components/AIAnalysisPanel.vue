@@ -326,6 +326,7 @@ import {
   UserFilled, MagicStick, Refresh, Download, DocumentChecked,
   Warning, Location, TrendCharts, Bottom, Minus, Clock
 } from '@element-plus/icons-vue'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   taskId: {
@@ -379,8 +380,7 @@ const generateAnalysis = async () => {
       type: 'info'
     })
 
-    // 调用AI分析API
-    const response = await fetch(`http://localhost:8000/api/deepseek/generate-report`, {
+    const response = await fetch(getFullApiURL('/api/deepseek/generate-report'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -415,7 +415,7 @@ const pollAnalysisStatus = async () => {
 
   const poll = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/deepseek/check/${props.taskId}`)
+      const response = await fetch(getFullApiURL(`/api/deepseek/check/${props.taskId}`))
       const status = await response.json()
 
       analysisStatus.value = status.status
@@ -448,7 +448,7 @@ const pollAnalysisStatus = async () => {
 
 const loadExistingAnalysis = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/deepseek/get/${props.taskId}`)
+    const response = await fetch(getFullApiURL(`/api/deepseek/get/${props.taskId}`))
     
     if (response.ok) {
       const result = await response.json()
@@ -464,7 +464,7 @@ const loadExistingAnalysis = async () => {
 
 const loadAnalysisResult = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/deepseek/get/${props.taskId}`)
+    const response = await fetch(getFullApiURL(`/api/deepseek/get/${props.taskId}`))
     const result = await response.json()
     
     if (result.analysis) {

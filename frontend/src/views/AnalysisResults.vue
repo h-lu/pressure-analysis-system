@@ -188,16 +188,18 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { Loading, Picture, Download } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { getFullApiURL } from '@/config'
 
 const route = useRoute()
+const router = useRouter()
 const fileName = ref('demo_data.csv')
 const taskId = computed(() => route.params.taskId || 'demo-task-id')
 
 // API基础地址
-const API_BASE = 'http://localhost:8000'
+const API_BASE = getFullApiURL('')
 
 // 改进的markdown渲染函数
 const markdownToHtml = (markdown) => {
@@ -257,24 +259,37 @@ const summaryData = ref({
 
 // 获取分析结果数据
 const fetchAnalysisResults = async () => {
+  if (!taskId.value) {
+    ElMessage.error('任务ID不能为空')
+    return
+  }
+
+  const loading = ref(true)
   try {
-    console.log('获取分析结果...')
-    const response = await fetch(`http://localhost:8000/api/results/${taskId.value}`)
+    console.log('获取分析结果，任务ID:', taskId.value)
+    
+    const response = await fetch(getFullApiURL(`/api/results/${taskId.value}`))
     
     if (!response.ok) {
-      throw new Error(`API返回错误: ${response.status}`)
+      if (response.status === 404) {
+        throw new Error('分析结果不存在，可能任务还未完成或已被删除')
+      }
+      throw new Error(`获取结果失败: ${response.status}`)
     }
-    
+
     const data = await response.json()
-    console.log('分析结果API返回:', data)
-    
-    // 解析真实的分析结果数据 - 基于实际返回的数据结构
-    if (data.result) {
-      const result = data.result
-      console.log('完整的分析结果数据:', result)
+    console.log('分析结果数据:', data)
+
+    if (data.success && data.results) {
+      const analysisResults = data.results
+      const taskInfo = data.task_info || {}
       
-      // 从analysis_results中获取数据，这是真正的分析结果数据结构
-      const analysisResults = result.analysis_results || {}
+      // 处理图表列表
+      if (analysisResults.charts && Array.isArray(analysisResults.charts)) {
+        chartList.value = analysisResults.charts
+      }
+      
+      // 解析真实的分析结果数据 - 基于实际返回的数据结构
       const summary = analysisResults.summary || {}
       const targetAnalysis = analysisResults.target_analysis || []
       const processCapability = analysisResults.process_capability || []
@@ -323,41 +338,28 @@ const fetchAnalysisResults = async () => {
       }
       
       console.log('解析后的分析结果:', summaryData.value)
-    } else {
-      console.warn('API返回数据格式不正确:', data)
-      // 使用默认值
-      summaryData.value = {
-        successRate: 0,
-        dataPoints: 0,
-        cpValue: 0,
-        qualityGrade: '未知',
-        analysisTime: '未知',
-        targetForces: [],
-        meanForce: 0,
-        stdForce: 0,
-        cvPercent: 0
+      
+      // 更新文件名
+      if (data.data_summary && data.data_summary.filename) {
+        fileName.value = data.data_summary.filename
       }
+      
+      // ElMessage.success('分析结果加载成功') // 移除这个消息，避免混淆
+    } else {
+      throw new Error(data.message || '获取分析结果失败')
     }
-    
-    // 更新文件名
-    if (data.data_summary && data.data_summary.filename) {
-      fileName.value = data.data_summary.filename
-    }
-    
   } catch (error) {
     console.error('获取分析结果失败:', error)
-    // 设置错误状态的默认值
-    summaryData.value = {
-      successRate: 0,
-      dataPoints: 0,
-      cpValue: 0,
-      qualityGrade: '获取失败',
-      analysisTime: '未知',
-      targetForces: [],
-      meanForce: 0,
-      stdForce: 0,
-      cvPercent: 0
+    ElMessage.error(error.message || '获取分析结果失败')
+    
+    // 如果是404错误，可能需要跳转回任务列表
+    if (error.message.includes('不存在')) {
+      setTimeout(() => {
+        router.push('/task-management')
+      }, 2000)
     }
+  } finally {
+    loading.value = false
   }
 }
 
@@ -426,7 +428,7 @@ const generateAIAnalysis = async () => {
     console.log('开始生成AI分析报告...')
     
     // 调用AI分析API
-    const response = await fetch(`${API_BASE}/api/deepseek/generate-comprehensive-word-report?task_id=${taskId.value}`, {
+    const response = await fetch(getFullApiURL(`/api/deepseek/generate-comprehensive-word-report?task_id=${taskId.value}`), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -445,7 +447,12 @@ const generateAIAnalysis = async () => {
     
     // 立即尝试获取分析结果
     try {
-      const analysisResponse = await fetch(`${API_BASE}/api/deepseek/get/${taskId.value}`)
+      const analysisResponse = await fetch(getFullApiURL(`/api/deepseek/get/${taskId.value}`), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
       if (analysisResponse.ok) {
         const analysisData = await analysisResponse.json()
         console.log('获取到的AI分析数据:', analysisData)
@@ -488,7 +495,7 @@ const downloadWordReport = async () => {
     console.log('开始下载Word报告...')
     
     // 调用下载Word报告的API
-    const response = await fetch(`${API_BASE}/api/download-comprehensive-report/${taskId.value}`, {
+    const response = await fetch(getFullApiURL(`/api/download-comprehensive-report/${taskId.value}`), {
       method: 'GET'
     })
     
@@ -530,7 +537,7 @@ const exportData = async () => {
     console.log('开始导出数据...')
     
     // 使用新的CSV下载API
-    const downloadUrl = `${API_BASE}/api/download-csv/${taskId.value}`
+    const downloadUrl = getFullApiURL(`/api/download-csv/${taskId.value}`)
     
     // 直接尝试下载文件
     const response = await fetch(downloadUrl)
@@ -612,7 +619,7 @@ const downloadChart = (chart) => {
 const checkAIAnalysisExists = async () => {
   try {
     console.log('检查AI分析是否存在...')
-    const response = await fetch(`${API_BASE}/api/deepseek/get/${taskId.value}`)
+    const response = await fetch(getFullApiURL(`/api/deepseek/get/${taskId.value}`))
     
     if (response.ok) {
       const analysisData = await response.json()

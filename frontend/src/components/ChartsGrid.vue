@@ -300,6 +300,7 @@ import {
 } from '@/utils/chartConfig'
 import { useCharts } from '@/composables/useCharts'
 import { chartsAPI } from '@/api/charts'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   taskId: {
@@ -410,7 +411,7 @@ const downloadChart = async (chart) => {
   if (!chart) return
   
   try {
-    const response = await fetch(`http://localhost:8000/api/chart/${props.taskId}/${chart.name}`)
+    const response = await fetch(getFullApiURL(`/api/chart/${props.taskId}/${chart.name}`))
     const blob = await response.blob()
     
     const url = URL.createObjectURL(blob)

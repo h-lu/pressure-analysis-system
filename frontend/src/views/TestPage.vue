@@ -15,18 +15,22 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { getFullApiURL } from '@/config'
 
 const backendStatus = ref(null)
 
 const testBackend = async () => {
   try {
-    const response = await fetch('http://localhost:8000/health')
+    const response = await fetch(getFullApiURL('/health'))
     const data = await response.json()
-    backendStatus.value = JSON.stringify(data, null, 2)
-    ElMessage.success('后端连接成功')
+    
+    if (response.ok) {
+      ElMessage.success(`后端连接成功: ${data.message}`)
+    } else {
+      ElMessage.error('后端连接失败')
+    }
   } catch (error) {
-    backendStatus.value = `错误: ${error.message}`
-    ElMessage.error('后端连接失败')
+    ElMessage.error('无法连接到后端服务')
   }
 }
 </script>

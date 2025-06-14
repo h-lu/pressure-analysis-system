@@ -200,6 +200,7 @@ import {
   Link
 } from '@element-plus/icons-vue'
 import { chartCategories } from '@/config/chartConfig'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   chartName: {
@@ -281,11 +282,13 @@ const loadChart = async () => {
   error.value = null
 
   try {
-    const url = `http://localhost:8000/api/chart/${props.taskId}/${props.chartName}`
+    const url = getFullApiURL(`/api/chart/${props.taskId}/${props.chartName}`)
+    
     const response = await fetch(url, { method: 'HEAD' })
     
     if (response.ok) {
       chartUrl.value = `${url}?t=${Date.now()}`
+      emit('load', props.chartName)
     } else {
       throw new Error(`图表不存在: ${response.status}`)
     }

@@ -46,56 +46,26 @@
           </div>
         </div>
 
-        <!-- 任务信息网格 -->
-        <div class="task-info-grid">
-          <div class="info-row">
-            <div class="info-item">
-              <span class="info-label">开始时间:</span>
-              <span class="info-value">{{ taskInfo.startTime || '未开始' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">运行时长:</span>
-              <span class="info-value">{{ taskInfo.duration }}</span>
-            </div>
-          </div>
-          
-          <div class="info-row">
-            <div class="info-item">
-              <span class="info-label">预计剩余:</span>
-              <span class="info-value remaining-time">{{ taskInfo.remainingTime }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">数据文件:</span>
-              <span class="info-value">{{ taskInfo.dataFile || '未知文件' }}</span>
-            </div>
-          </div>
-        </div>
-
         <!-- 进度条 -->
         <div class="progress-section">
           <div class="progress-header">
-            <span class="progress-label">总体进度:</span>
-            <span class="progress-percentage">{{ taskInfo.progress }}%</span>
+            <span class="progress-label">图表生成进度:</span>
+            <span class="progress-percentage">{{ chartsCompleted }}/35 ({{ Math.round(progressPercentage) }}%)</span>
           </div>
           <el-progress 
-            :percentage="taskInfo.progress" 
+            :percentage="progressPercentage" 
             :status="progressStatus"
-            :stroke-width="16"
+            :stroke-width="20"
             :show-text="false"
             class="main-progress"
           />
         </div>
 
-        <!-- 当前阶段 -->
-        <div class="current-stage">
-          <span class="stage-label">当前阶段:</span>
-          <span class="stage-text">{{ taskInfo.currentStage || '等待中' }}</span>
-        </div>
-
-        <!-- 详细进度 -->
-        <div class="detailed-progress">
-          <span class="detail-info">图表生成进度: {{ taskInfo.chartsCompleted }}/35 完成</span>
-          <span class="detail-info">当前: {{ taskInfo.currentChart || '等待开始' }}</span>
+        <!-- 状态信息 -->
+        <div class="status-info">
+          <div class="status-message">
+            {{ getStatusMessage() }}
+          </div>
         </div>
       </div>
     </div>
@@ -108,6 +78,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { getFullApiURL } from '@/config'
 
 const route = useRoute()
 const router = useRouter()
@@ -115,25 +86,33 @@ const taskId = ref(route.params.taskId || '4514bcbf-1459-409c-8e17-710e6b73ab31'
 
 // 任务信息
 const taskInfo = ref({
-  startTime: '',
-  duration: '',
-  remainingTime: '',
-  dataFile: '',
+  status: 'pending',
+  task_id: '',
+  created_at: '',
+  started_at: '',
+  completed_at: '',
   progress: 0,
-  currentStage: '',
-  chartsCompleted: 0,
-  currentChart: '',
-  status: 'pending'
+  message: '',
+  error: null
 })
+
+// 图表计数
+const chartsCompleted = ref(0)
+const totalCharts = 35
 
 // 轮询状态
 const isPolling = ref(false)
 
 // 计算属性
+const progressPercentage = computed(() => {
+  if (taskInfo.value.status === 'completed') return 100
+  return Math.min((chartsCompleted.value / totalCharts) * 100, 99)
+})
+
 const progressStatus = computed(() => {
   if (taskInfo.value.status === 'failed') return 'exception'
-  if (taskInfo.value.progress < 100) return 'active'
-  return 'success'
+  if (taskInfo.value.status === 'completed') return 'success'
+  return 'active'
 })
 
 const getStatusText = (status) => {
@@ -146,20 +125,56 @@ const getStatusText = (status) => {
   }
 }
 
+const getStatusMessage = () => {
+  switch (taskInfo.value.status) {
+    case 'pending':
+      return '任务正在准备中，请稍候...'
+    case 'running':
+      return `正在生成图表... (${chartsCompleted.value}/${totalCharts})`
+    case 'completed':
+      return '所有图表生成完成！即将跳转到结果页面...'
+    case 'failed':
+      return `任务执行失败: ${taskInfo.value.error || '未知错误'}`
+    default:
+      return '获取状态中...'
+  }
+}
+
+// 检查图表生成进度
+const checkChartsProgress = async () => {
+  try {
+    const response = await fetch(getFullApiURL(`/api/charts-count/${taskId.value}`))
+    if (response.ok) {
+      const data = await response.json()
+      if (data.success) {
+        chartsCompleted.value = data.count || 0
+      }
+    }
+  } catch (error) {
+    console.log('获取图表计数失败:', error)
+    // 如果API不存在，根据任务状态估算进度
+    if (taskInfo.value.status === 'running') {
+      chartsCompleted.value = Math.min(chartsCompleted.value + 1, totalCharts - 1)
+    } else if (taskInfo.value.status === 'completed') {
+      chartsCompleted.value = totalCharts
+    }
+  }
+}
+
 const viewResults = () => {
   router.push(`/results/${taskId.value}`)
 }
 
 const stopTask = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/task/${taskId.value}`, {
+    const response = await fetch(getFullApiURL(`/api/task/${taskId.value}`), {
       method: 'DELETE'
     })
     
     if (response.ok) {
       ElMessage.success('任务已停止')
       // 重新获取任务状态
-      await fetchTaskStatus()
+      await fetchTaskInfo()
     } else {
       ElMessage.error('停止任务失败')
     }
@@ -169,142 +184,87 @@ const stopTask = async () => {
   }
 }
 
+const pollTaskStatus = async () => {
+  if (!taskId.value) return
 
-
-// 获取任务状态
-const fetchTaskStatus = async () => {
   try {
-    console.log('Fetching task status for:', taskId.value)
-    
-    const response = await fetch(`http://localhost:8000/api/task/${taskId.value}`)
-    
+    const response = await fetch(getFullApiURL(`/api/task/${taskId.value}`), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+
     if (!response.ok) {
-      throw new Error(`API返回错误: ${response.status}`)
+      throw new Error(`获取任务状态失败: ${response.status}`)
     }
-    
+
     const data = await response.json()
-    const task = data.task || data
-    console.log('API返回数据:', task)
-    
-    if (!task) {
-      throw new Error('无法找到任务信息')
-    }
-    
-    // 计算图表生成进度（基于实际生成的图片文件）
-    let chartsCompleted = 0
-    let calculatedProgress = task.progress || 0
-    
-    if (task.status === 'completed') {
-      chartsCompleted = 35
-      calculatedProgress = 100
-    } else if (task.status === 'running') {
-      // 如果任务正在运行，尝试通过图表数量计算进度
-      chartsCompleted = Math.floor((task.progress || 0) * 35 / 100)
-      calculatedProgress = Math.min((chartsCompleted / 35) * 100, 99) // 确保不超过99%，除非真正完成
-    }
-    
-    // 格式化时间显示
-    const formatDisplayTime = (timeStr) => {
-      if (!timeStr) return ''
-      try {
-        const date = new Date(timeStr)
-        return date.toLocaleString('zh-CN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        })
-      } catch (e) {
-        return timeStr
+    console.log('任务状态:', data)
+
+    if (data.success && data.task) {
+      taskInfo.value = data.task
+      
+      if (data.task.status === 'completed') {
+        ElMessage.success('分析完成！')
+        stopPolling()
+        // 延迟跳转，让用户看到完成消息
+        setTimeout(() => {
+          router.push(`/results/${taskId.value}`)
+        }, 1500)
+      } else if (data.task.status === 'failed') {
+        ElMessage.error(`分析失败: ${data.task.error || '未知错误'}`)
+        stopPolling()
       }
     }
-    
-    // 使用正确的字段名（后端返回的是started_at而不是start_time）
-    const startTime = task.started_at || task.created_at
-    
-    taskInfo.value = {
-      startTime: formatDisplayTime(startTime),
-      duration: task.status === 'completed' 
-        ? calculateCompletedDuration(startTime, task.completed_at)
-        : formatDuration(startTime),
-      remainingTime: task.status === 'completed' 
-        ? '已完成' 
-        : calculateRemainingTime(calculatedProgress, startTime),
-      dataFile: task.filename || task.name || task.file_id || '未知文件',
-      progress: Math.round(calculatedProgress),
-      currentStage: task.status === 'completed' ? '分析完成' : (task.message || task.stage || '等待中'),
-      chartsCompleted: chartsCompleted,
-      currentChart: task.status === 'completed' ? '所有图表已生成' : (task.message || task.stage || '等待开始'),
-      status: task.status || 'pending'
-    }
-    
-    console.log('更新后的taskInfo:', taskInfo.value)
-    
-    // 如果任务完成或失败，停止轮询
-    if (['completed', 'failed'].includes(task.status)) {
-      stopPolling()
-    }
-    
   } catch (error) {
     console.error('获取任务状态失败:', error)
-    // 如果API调用失败，停止轮询
-    stopPolling()
+    ElMessage.error('获取任务状态失败')
   }
 }
 
-// 格式化时间
-const formatTime = (timestamp) => {
-  if (!timestamp) return ''
-  return new Date(timestamp).toLocaleTimeString()
+const fetchTaskInfo = async () => {
+  if (!taskId.value) return
+
+  try {
+    const response = await fetch(getFullApiURL(`/api/task/${taskId.value}`))
+    
+    if (!response.ok) {
+      throw new Error(`获取任务信息失败: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log('任务状态:', data)
+    
+    if (data.success && data.task) {
+      const previousStatus = taskInfo.value.status
+      taskInfo.value = data.task
+      
+      // 检查图表进度
+      await checkChartsProgress()
+      
+      // 检查任务是否完成
+      if (data.task.status === 'completed' && previousStatus !== 'completed') {
+        console.log('任务完成，准备跳转')
+        ElMessage.success('分析完成！')
+        stopPolling()
+        // 延迟跳转，让用户看到完成消息
+        setTimeout(() => {
+          console.log('执行跳转到结果页面')
+          router.push(`/results/${taskId.value}`)
+        }, 2000)
+      } else if (data.task.status === 'failed') {
+        ElMessage.error(`分析失败: ${data.task.error || '未知错误'}`)
+        stopPolling()
+      }
+    } else {
+      throw new Error(data.message || '获取任务信息失败')
+    }
+  } catch (error) {
+    console.error('获取任务信息失败:', error)
+    ElMessage.error(error.message || '获取任务信息失败')
+  }
 }
-
-// 格式化持续时间
-const formatDuration = (startTime) => {
-  if (!startTime) return '00:00:00'
-  const start = new Date(startTime)
-  const now = new Date()
-  const diff = now - start
-  const hours = Math.floor(diff / 3600000)
-  const minutes = Math.floor((diff % 3600000) / 60000)
-  const seconds = Math.floor((diff % 60000) / 1000)
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-// 计算已完成任务的持续时间
-const calculateCompletedDuration = (startTime, endTime) => {
-  if (!startTime) return '00:00:00'
-  
-  const start = new Date(startTime)
-  const end = endTime ? new Date(endTime) : new Date(startTime)
-  const diff = end - start
-  
-  const hours = Math.floor(diff / 3600000)
-  const minutes = Math.floor((diff % 3600000) / 60000)
-  const seconds = Math.floor((diff % 60000) / 1000)
-  
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-// 计算剩余时间
-const calculateRemainingTime = (progress, startTime) => {
-  if (!progress || progress <= 0 || !startTime) return '计算中...'
-  if (progress >= 100) return '已完成'
-  
-  const start = new Date(startTime)
-  const now = new Date()
-  const elapsed = now - start
-  const totalTime = elapsed / (progress / 100)
-  const remaining = totalTime - elapsed
-  if (remaining <= 0) return '即将完成'
-  
-  const minutes = Math.floor(remaining / 60000)
-  const seconds = Math.floor((remaining % 60000) / 1000)
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-
 
 // 定时更新任务状态
 let statusInterval = null
@@ -312,7 +272,7 @@ let statusInterval = null
 const startPolling = () => {
   if (statusInterval) return
   isPolling.value = true
-  statusInterval = setInterval(fetchTaskStatus, 2000)
+  statusInterval = setInterval(fetchTaskInfo, 2000)
 }
 
 const stopPolling = () => {
@@ -324,12 +284,17 @@ const stopPolling = () => {
 }
 
 onMounted(async () => {
+  console.log('TaskStatus页面加载，任务ID:', taskId.value)
+  
   // 立即获取一次状态
-  await fetchTaskStatus()
+  await fetchTaskInfo()
   
   // 只有当任务还在运行时才启动轮询
   if (['running', 'pending'].includes(taskInfo.value.status)) {
+    console.log('启动轮询，当前状态:', taskInfo.value.status)
     startPolling()
+  } else {
+    console.log('任务已完成或失败，不启动轮询，状态:', taskInfo.value.status)
   }
 })
 
@@ -381,7 +346,7 @@ onUnmounted(() => {
   border: 1px solid #e4e7ed;
   border-radius: 6px;
   margin-bottom: 20px;
-  min-height: 200px;
+  min-height: 180px;
 }
 
 .card-header {
@@ -447,6 +412,49 @@ onUnmounted(() => {
   color: #F56C6C;
   font-size: 16px;
   font-weight: bold;
+}
+
+/* 进度条样式 */
+.progress-section {
+  margin: 25px 0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #303133;
+}
+
+.progress-percentage {
+  font-size: 16px;
+  font-weight: bold;
+  color: #409EFF;
+}
+
+.main-progress {
+  margin-bottom: 10px;
+}
+
+/* 状态信息 */
+.status-info {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.status-message {
+  font-size: 14px;
+  color: #606266;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #409EFF;
 }
 
 .status-badge.pending .status-dot {

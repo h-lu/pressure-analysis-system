@@ -28,7 +28,7 @@
         <h3>系统状态</h3>
       </template>
       <div>
-        <el-button @click="testAPI" type="primary">测试API连接</el-button>
+        <el-button @click="checkHealth" type="primary">检查后端服务</el-button>
         <div v-if="apiResult" style="margin-top: 10px;">
           <pre>{{ apiResult }}</pre>
         </div>
@@ -41,18 +41,22 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
+import { getFullApiURL } from '@/config'
 
 const apiResult = ref('')
 
-const testAPI = async () => {
+const checkHealth = async () => {
   try {
-    const response = await fetch('http://localhost:8000/health')
+    const response = await fetch(getFullApiURL('/health'))
     const data = await response.json()
-    apiResult.value = JSON.stringify(data, null, 2)
-    ElMessage.success('API连接成功')
+    
+    if (response.ok) {
+      ElMessage.success(`后端服务正常: ${data.message}`)
+    } else {
+      ElMessage.error('后端服务异常')
+    }
   } catch (error) {
-    apiResult.value = `错误: ${error.message}`
-    ElMessage.error('API连接失败')
+    ElMessage.error('无法连接到后端服务')
   }
 }
 </script>

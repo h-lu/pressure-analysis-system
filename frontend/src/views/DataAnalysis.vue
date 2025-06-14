@@ -265,6 +265,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { getFullApiURL } from '@/config'
 
 const router = useRouter()
 const fileInput = ref(null)
@@ -424,7 +425,7 @@ const startAnalysis = async () => {
     currentStage.value = '上传文件中...'
     progressPercentage.value = 10
     
-    const uploadResponse = await fetch('http://localhost:8000/api/upload', {
+    const uploadResponse = await fetch(getFullApiURL('/api/upload'), {
       method: 'POST',
       body: formData
     })
@@ -448,7 +449,7 @@ const startAnalysis = async () => {
       tolerance_pct: forceConfigs.value.map(f => f.percentageTolerance)
     }
     
-    const analysisResponse = await fetch('http://localhost:8000/api/analyze', {
+    const analysisResponse = await fetch(getFullApiURL('/api/analyze'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -157,6 +157,7 @@ import {
 import { useAnalysisStore } from '@/stores/analysis'
 import { useErrorHandler } from '@/composables/useErrorHandler'
 import { useSpecificErrorHandler } from '@/composables/useSpecificErrorHandler'
+import { getFullApiURL } from '@/config'
 
 const route = useRoute()
 const analysisStore = useAnalysisStore()
@@ -218,23 +219,30 @@ const getSystemStatusText = () => {
 }
 
 // 状态检查方法
-async function checkBackendStatus() {
+const checkBackendHealth = async () => {
   try {
-    const response = await fetch('http://localhost:8000/health', { 
-      timeout: 5000,
-      signal: AbortSignal.timeout(5000)
+    const response = await fetch(getFullApiURL('/health'), {
+      method: 'GET',
+      timeout: 5000
     })
-    backendStatus.value = response.ok
     
-    if (!response.ok) {
-      errorHandler.handleNetworkError(
-        new Error(`Backend health check failed: ${response.status}`),
-        'Sidebar health check'
-      )
+    if (response.ok) {
+      const data = await response.json()
+      backendStatus.value = {
+        connected: true,
+        message: data.message || '后端服务正常'
+      }
+    } else {
+      backendStatus.value = {
+        connected: false,
+        message: `后端服务异常 (${response.status})`
+      }
     }
   } catch (error) {
-    backendStatus.value = false
-    errorHandler.handleNetworkError(error, 'Sidebar backend connection check')
+    backendStatus.value = {
+      connected: false,
+      message: '无法连接到后端服务'
+    }
   }
 }
 
@@ -302,7 +310,7 @@ const showErrorPanel = () => {
 
 function startStatusPolling() {
   statusPolling = setInterval(async () => {
-    await checkBackendStatus()
+    await checkBackendHealth()
     await updateRunningTasks()
   }, 15000) // 每15秒检查一次
 }
@@ -315,7 +323,7 @@ function stopStatusPolling() {
 }
 
 onMounted(() => {
-  checkBackendStatus()
+  checkBackendHealth()
   updateRunningTasks()
   startStatusPolling()
 })

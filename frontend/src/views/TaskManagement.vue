@@ -153,6 +153,8 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Refresh } from '@element-plus/icons-vue'
 import { useAnalysisStore } from '@/stores/analysis'
+import { analysisAPI } from '@/api/analysis'
+import { getFullApiURL } from '@/config'
 
 const analysisStore = useAnalysisStore()
 
@@ -232,7 +234,7 @@ const fetchTasks = async () => {
   try {
     console.log('获取任务列表...')
     // 使用历史记录API而不是tasks API，确保获取最新的数据包括修改后的名称
-    const response = await fetch('http://localhost:8000/api/history/')
+    const response = await fetch(getFullApiURL('/api/history/'))
     
     if (!response.ok) {
       throw new Error(`API返回错误: ${response.status}`)

@@ -314,6 +314,7 @@ import {
 } from '@element-plus/icons-vue'
 import { useAnalysisStore } from '@/stores/analysis'
 import { analysisAPI } from '@/api'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   filename: String,
@@ -566,15 +567,14 @@ async function checkServiceHealth() {
     const startTime = Date.now()
     
     // 检查后端健康状态
-    const response = await fetch('http://localhost:8000/health')
+    const response = await fetch(getFullApiURL('/health'))
     const latency = Date.now() - startTime
     
     if (response.ok) {
-      const data = await response.json()
       systemHealth.value = {
         status: 'healthy',
         latency,
-        version: data.version || 'unknown'
+        version: 'unknown'
       }
       checks.value.service = { status: 'success', message: '后端服务正常' }
     } else {

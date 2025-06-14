@@ -433,14 +433,14 @@
         <div class="status-item">
           <strong>前端:</strong> 
           <el-tag type="success">运行中</el-tag>
-          <span>http://localhost:5173</span>
+          <span>{{ window.location.origin }}</span>
         </div>
         <div class="status-item">
           <strong>后端:</strong> 
           <el-tag :type="backendStatus.connected ? 'success' : 'danger'">
             {{ backendStatus.connected ? '已连接' : '断开' }}
           </el-tag>
-          <span>http://localhost:8000</span>
+                          <span>{{ getFullApiURL('') || '相对路径' }}</span>
         </div>
       </div>
     </el-card>
@@ -452,6 +452,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { UploadFilled, Plus, Delete } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { getFullApiURL } from '@/config'
 
 const router = useRouter()
 
@@ -579,7 +580,7 @@ const uploadFile = async () => {
     const formData = new FormData()
     formData.append('file', selectedFile.value)
     
-    const response = await fetch('http://localhost:8000/api/upload', {
+    const response = await fetch(getFullApiURL('/api/upload'), {
       method: 'POST',
       body: formData
     })
@@ -647,7 +648,7 @@ const startAnalysis = async () => {
     const toleranceAbs = targetForcesList.value.map(config => config.absTolerance)
     const tolerancePct = targetForcesList.value.map(config => config.pctTolerance)
     
-    const response = await fetch('http://localhost:8000/api/analyze', {
+    const response = await fetch(getFullApiURL('/api/analyze'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -697,7 +698,7 @@ const pollTaskStatus = async () => {
   if (!currentTask.value?.task_id) return
   
   try {
-    const response = await fetch(`http://localhost:8000/api/task/${currentTask.value.task_id}`)
+    const response = await fetch(getFullApiURL(`/api/task/${currentTask.value.task_id}`))
     const result = await response.json()
     logApiCall('GET', `/api/task/${currentTask.value.task_id}`, response.status, result)
     
@@ -749,7 +750,7 @@ const getAnalysisResults = async () => {
   if (!currentTask.value?.task_id) return
   
   try {
-    const response = await fetch(`http://localhost:8000/api/results/${currentTask.value.task_id}`)
+    const response = await fetch(getFullApiURL(`/api/results/${currentTask.value.task_id}`))
     const result = await response.json()
     logApiCall('GET', `/api/results/${currentTask.value.task_id}`, response.status, result)
     
@@ -774,7 +775,7 @@ const generateAIReport = async () => {
   
   generatingAI.value = true
   try {
-    const response = await fetch('http://localhost:8000/api/deepseek/generate-report', {
+    const response = await fetch(getFullApiURL('/api/deepseek/generate-report'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -808,7 +809,7 @@ const getAIAnalysis = async () => {
   if (!currentTask.value?.task_id) return
   
   try {
-    const response = await fetch(`http://localhost:8000/api/deepseek/get/${currentTask.value.task_id}`)
+    const response = await fetch(getFullApiURL(`/api/deepseek/get/${currentTask.value.task_id}`))
     const result = await response.json()
     logApiCall('GET', `/api/deepseek/get/${currentTask.value.task_id}`, response.status, result)
     
@@ -825,7 +826,7 @@ const generateWordReport = async () => {
   
   generatingWord.value = true
   try {
-    const response = await fetch('http://localhost:8000/api/deepseek/generate-comprehensive-word-report', {
+    const response = await fetch(getFullApiURL('/api/deepseek/generate-comprehensive-word-report'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -856,7 +857,7 @@ const downloadWordReport = async () => {
   if (!currentTask.value?.task_id) return
   
   try {
-    const response = await fetch(`http://localhost:8000/api/download-comprehensive-report/${currentTask.value.task_id}`)
+          const response = await fetch(getFullApiURL(`/api/download-comprehensive-report/${currentTask.value.task_id}`))
     
     if (response.ok) {
       const blob = await response.blob()
@@ -1033,7 +1034,7 @@ const completeAnalysis = () => {
 // 测试函数
 const testAPIConnection = async () => {
   try {
-    const response = await fetch('http://localhost:8000/health')
+    const response = await fetch(getFullApiURL('/health'))
     const result = await response.json()
     logApiCall('GET', '/health', response.status, result)
     
@@ -1120,8 +1121,8 @@ const runQuickTest = async () => {
 
 const viewAPIStatus = () => {
   ElMessageBox.alert(`
-    前端: http://localhost:5173 ✅
-    后端: http://localhost:8000 ${backendStatus.value.connected ? '✅' : '❌'}
+    前端: ${window.location.origin} ✅
+            后端: ${getFullApiURL('') || '相对路径'} ${backendStatus.value.connected ? '✅' : '❌'}
     DeepSeek AI: ${aiReportGenerated.value ? '✅' : '未测试'}
     当前步骤: ${currentStep.value + 1}/4
     上传文件: ${uploadedFileName.value || '未上传'}

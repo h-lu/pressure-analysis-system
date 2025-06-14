@@ -228,6 +228,7 @@ import {
   Document, MagicStick, Download, Loading, DocumentChecked, Clock
 } from '@element-plus/icons-vue'
 import { CHART_CATEGORIES, getAllChartNames, getChartsByCategory } from '@/utils/chartConfig'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   taskId: {
@@ -364,7 +365,7 @@ const generateReport = async () => {
       }
     }
 
-    const response = await fetch('http://localhost:8000/api/deepseek/generate-comprehensive-word-report', {
+    const response = await fetch(getFullApiURL('/api/deepseek/generate-comprehensive-word-report'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -402,7 +403,7 @@ const ensureAIAnalysis = async () => {
     currentStage.value = '正在生成AI分析...'
     currentStep.value = '生成AI分析报告'
     
-    const response = await fetch('http://localhost:8000/api/deepseek/generate-report', {
+    const response = await fetch(getFullApiURL('/api/deepseek/generate-report'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -427,7 +428,7 @@ const waitForAIAnalysis = async () => {
   let attempts = 0
 
   while (attempts < maxAttempts) {
-    const response = await fetch(`http://localhost:8000/api/deepseek/check/${props.taskId}`)
+    const response = await fetch(getFullApiURL(`/api/deepseek/check/${props.taskId}`))
     const status = await response.json()
 
     if (status.status === 'completed') {
@@ -534,7 +535,7 @@ const downloadReport = async () => {
   downloading.value = true
 
   try {
-    const response = await fetch(`http://localhost:8000/api/download-comprehensive-report/${props.taskId}`, {
+    const response = await fetch(getFullApiURL(`/api/download-comprehensive-report/${props.taskId}`), {
       method: 'GET'
     })
 
@@ -567,7 +568,7 @@ const downloadReport = async () => {
 
 const downloadHistoryReport = async (report) => {
   try {
-    const response = await fetch(`http://localhost:8000/api/download-comprehensive-report/${props.taskId}?report_id=${report.report_id}`)
+    const response = await fetch(getFullApiURL(`/api/download-comprehensive-report/${props.taskId}?report_id=${report.report_id}`))
     
     if (!response.ok) {
       throw new Error('下载失败')

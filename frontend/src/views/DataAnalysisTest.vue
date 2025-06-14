@@ -106,6 +106,7 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { getFullApiURL } from '@/config'
 
 const router = useRouter()
 
@@ -143,105 +144,131 @@ const formatFileSize = (bytes) => {
 }
 
 const uploadFile = async () => {
-  if (!selectedFile.value) return
-  
+  if (!selectedFile.value) {
+    ElMessage.error('请先选择文件')
+    return
+  }
+
   uploading.value = true
+  uploadProgress.value = 0
+
   try {
     const formData = new FormData()
     formData.append('file', selectedFile.value)
-    
-    const response = await fetch('http://localhost:8000/api/upload', {
+
+    const response = await fetch(getFullApiURL('/api/upload'), {
       method: 'POST',
       body: formData
     })
-    
-    const result = await response.json()
-    apiResult.value = JSON.stringify(result, null, 2)
-    ElMessage.success('文件上传成功')
+
+    if (!response.ok) {
+      throw new Error(`上传失败: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log('上传响应:', data)
+
+    if (data.success) {
+      uploadedFileName.value = data.filename
+      ElMessage.success('文件上传成功')
+    } else {
+      throw new Error(data.message || '上传失败')
+    }
   } catch (error) {
-    ElMessage.error(`上传失败: ${error.message}`)
-    apiResult.value = `上传错误: ${error.message}`
+    console.error('上传失败:', error)
+    ElMessage.error(error.message || '上传失败')
   } finally {
     uploading.value = false
+    uploadProgress.value = 0
   }
 }
 
 const startAnalysis = async () => {
-  if (!selectedFile.value) {
-    ElMessage.warning('请先上传文件')
+  if (!uploadedFileName.value) {
+    ElMessage.error('请先上传文件')
     return
   }
-  
+
   analyzing.value = true
+  analysisProgress.value = 0
+
   try {
-    const response = await fetch('http://localhost:8000/api/analyze', {
+    const response = await fetch(getFullApiURL('/api/analyze'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        filename: selectedFile.value.name,
-        target_forces: analysisParams.value.targetForces.split(',').map(f => parseFloat(f.trim())),
-        absolute_tolerance: analysisParams.value.absoluteTolerance,
-        percentage_tolerance: analysisParams.value.percentageTolerance
+        filename: uploadedFileName.value
       })
     })
-    
-    const result = await response.json()
-    currentTask.value = result
-    apiResult.value = JSON.stringify(result, null, 2)
-    ElMessage.success('分析任务已启动')
-    
-    // 可以导航到任务状态页面
-    if (result.task_id) {
-      setTimeout(() => {
-        router.push(`/task/${result.task_id}`)
-      }, 2000)
+
+    if (!response.ok) {
+      throw new Error(`分析失败: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log('分析响应:', data)
+
+    if (data.success) {
+      currentTaskId.value = data.task_id
+      ElMessage.success('分析任务已启动')
+      
+      // 开始轮询任务状态
+      pollTaskStatus()
+    } else {
+      throw new Error(data.message || '分析启动失败')
     }
   } catch (error) {
-    ElMessage.error(`启动分析失败: ${error.message}`)
-    apiResult.value = `分析错误: ${error.message}`
-  } finally {
+    console.error('分析失败:', error)
+    ElMessage.error(error.message || '分析失败')
     analyzing.value = false
   }
 }
 
-// API测试函数
-const testAPI = async () => {
+const checkHealth = async () => {
   try {
-    const response = await fetch('http://localhost:8000/health')
+    const response = await fetch(getFullApiURL('/health'))
     const data = await response.json()
-    apiResult.value = JSON.stringify(data, null, 2)
-    ElMessage.success('后端连接成功')
+    
+    if (response.ok) {
+      ElMessage.success(`后端服务正常: ${data.message}`)
+    } else {
+      ElMessage.error('后端服务异常')
+    }
   } catch (error) {
-    apiResult.value = `后端连接错误: ${error.message}`
-    ElMessage.error('后端连接失败')
+    ElMessage.error('无法连接到后端服务')
   }
 }
 
-const testAI = async () => {
+const testDeepSeek = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/deepseek/test-connection')
+    const response = await fetch(getFullApiURL('/api/deepseek/test-connection'))
     const data = await response.json()
-    apiResult.value = JSON.stringify(data, null, 2)
-    ElMessage.success('AI连接成功')
+    
+    if (response.ok && data.success) {
+      ElMessage.success('DeepSeek API 连接正常')
+    } else {
+      ElMessage.error(data.message || 'DeepSeek API 连接失败')
+    }
   } catch (error) {
-    apiResult.value = `AI连接错误: ${error.message}`
-    ElMessage.error('AI连接失败')
+    ElMessage.error('DeepSeek API 测试失败')
   }
 }
 
-const getTaskList = async () => {
+const getTasks = async () => {
   try {
-    const response = await fetch('http://localhost:8000/api/tasks')
+    const response = await fetch(getFullApiURL('/api/tasks'))
     const data = await response.json()
-    apiResult.value = JSON.stringify(data, null, 2)
-    ElMessage.success('获取任务列表成功')
+    
+    console.log('任务列表:', data)
+    ElMessage.success('任务列表获取成功，请查看控制台')
   } catch (error) {
-    apiResult.value = `获取任务列表错误: ${error.message}`
     ElMessage.error('获取任务列表失败')
   }
 }
+
+// API测试函数（这些函数与上面的函数重复，已经修复过了）
 </script>
 
 <style scoped>

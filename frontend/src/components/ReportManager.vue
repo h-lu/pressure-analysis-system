@@ -328,6 +328,7 @@ import {
   FolderOpened, Refresh, Search, ArrowDown, Plus, Document, DocumentCopy,
   Setting, DataAnalysis, Download, Upload
 } from '@element-plus/icons-vue'
+import { getFullApiURL } from '@/config'
 
 const props = defineProps({
   taskId: {
@@ -516,39 +517,27 @@ const handleRowClick = (row) => {
 }
 
 const downloadReport = async (report) => {
-  if (report.status !== 'completed') {
-    ElMessage.warning('报告尚未生成完成')
-    return
-  }
-
-  downloadingReports.value[report.id] = true
-
   try {
-    const response = await fetch(`http://localhost:8000/api/download-comprehensive-report/${report.task_id}?report_id=${report.id}`)
+    const response = await fetch(getFullApiURL(`/api/download-comprehensive-report/${report.task_id}?report_id=${report.id}`))
     
     if (!response.ok) {
-      throw new Error('下载失败')
+      throw new Error(`下载失败: ${response.status}`)
     }
 
     const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
+    const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `${report.title || getDefaultTitle(report)}.docx`
+    link.download = `${report.name || '分析报告'}.docx`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-
-    // 更新下载次数
-    report.download_count = (report.download_count || 0) + 1
+    window.URL.revokeObjectURL(url)
 
     ElMessage.success('报告下载成功')
   } catch (error) {
     console.error('下载报告失败:', error)
-    ElMessage.error('下载失败')
-  } finally {
-    downloadingReports.value[report.id] = false
+    ElMessage.error('下载报告失败')
   }
 }
 
