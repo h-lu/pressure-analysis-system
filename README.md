@@ -1,386 +1,304 @@
 # 压力采集数据分析系统
 
-## 🚀 项目介绍
-
-压力采集数据分析系统是一个基于 FastAPI + Vue 3 + R 统计分析的智能数据分析平台，集成了 DeepSeek AI 智能分析功能，专门用于压力测试数据的自动化分析和可视化。
-
-### ✨ 核心特性
-
-- **🔧 现代化技术栈**: FastAPI + Vue 3 + R + Docker
-- **📊 智能数据分析**: 集成 R 统计分析引擎，35+ 专业图表
-- **🤖 AI 智能报告**: DeepSeek AI 生成综合分析报告和建议
-- **🌍 中文全支持**: 完整的中文界面和中文图表生成
-- **🐳 容器化部署**: Docker 一键部署，2分钟快速启动
-- **📈 实时监控**: 任务状态实时监控和进度追踪
-- **📋 报告导出**: 支持 Word、PDF、图表包多格式导出
-
-### 🎯 主要功能
-
-#### 数据分析功能
-- ✅ CSV 文件上传和预览
-- ✅ 自定义分析参数（目标力值、容差设置）
-- ✅ 35+ 专业统计图表
-  - 基础分析图表 (8个): 时间序列、分布图、箱线图等
-  - 控制图 (7个): Shewhart、移动平均、CUSUM等
-  - 质量分析图 (12个): 过程能力、帕累托图、残差分析等
-  - 多维分析图 (8个): 热图、异常检测、空间聚类等
-- ✅ 过程能力分析 (Cp, Cpk 指标)
-- ✅ 质量等级评估
-- ✅ 异常检测和模式识别
-
-#### AI 智能分析
-- 🤖 DeepSeek AI 驱动的智能分析
-- 📊 自动生成综合分析报告
-- 💡 智能建议和改进方案
-- 📄 Word 格式报告导出
-
-#### 系统管理
-- 📋 任务管理和历史记录
-- 🔄 实时任务状态监控
-- ⚙️ 系统设置和配置管理
-- 📁 文件管理和存储
-
-## 🛠️ 技术架构
-
-### 后端技术栈
-- **Python 3.10**: 核心开发语言
-- **FastAPI**: 高性能 Web 框架
-- **R 4.2.2**: 统计分析引擎
-- **rpy2**: Python-R 接口
-- **DeepSeek AI**: 智能分析服务
-
-### 前端技术栈
-- **Vue 3**: 现代化前端框架
-- **Element Plus**: UI 组件库
-- **Pinia**: 状态管理
-- **ECharts**: 图表可视化
-- **Axios**: HTTP 客户端
-
-### 部署技术
-- **Docker**: 容器化部署
-- **Nginx**: 前端服务器
-- **Docker Compose**: 服务编排
+一个基于Vue.js + FastAPI + R的压力数据分析系统，支持数据上传、智能分析、图表生成和AI辅助分析。
 
 ## 🚀 快速开始
 
-### 环境要求
+### 系统要求
 
-- Docker >= 20.10
-- Docker Compose >= 2.0
-- 2GB+ 可用内存
-- 5GB+ 可用存储空间
+- Docker 20.0+
+- Docker Compose 2.0+
+- 至少 4GB 可用内存
+- 至少 10GB 可用磁盘空间
 
-### 一键部署
+### 生产环境部署
+
+#### 1. 克隆项目
 
 ```bash
-# 克隆项目
 git clone https://github.com/h-lu/pressure-analysis-system
-cd 压力系统
-
-# 运行部署脚本
-./docker-deploy.sh
-
-# 清理重新部署（可选）
-./docker-deploy.sh --clean
+cd pressure-analysis-system
 ```
 
-### 手动部署
+#### 2. 配置环境变量（可选）
+
+复制环境变量示例文件：
 
 ```bash
-# 创建数据目录
-mkdir -p data/uploads data/output data/logs
+cp env.example .env
+```
 
-# 构建并启动服务
-docker-compose build --parallel
+编辑 `.env` 文件，根据需要修改配置：
+
+```bash
+# ==================== 前端配置 ====================
+# 前端访问端口 (默认: 80)
+FRONTEND_PORT=80
+
+# ==================== 后端配置 ====================
+# 后端服务端口 (默认: 8000)
+BACKEND_PORT=8000
+
+# ==================== AI配置 ====================
+# DeepSeek AI 配置 (可选，也可以通过前端界面配置)
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+```
+
+#### 3. 启动服务
+
+**使用默认端口 (80)：**
+
+```bash
+docker-compose up -d
+```
+
+**使用自定义端口：**
+
+```bash
+# 方法1: 通过环境变量
+FRONTEND_PORT=8080 docker-compose up -d
+
+# 方法2: 修改 .env 文件
+echo "FRONTEND_PORT=8080" >> .env
 docker-compose up -d
 
-# 查看服务状态
-docker-compose ps
+# 方法3: 导出环境变量
+export FRONTEND_PORT=8080
+docker-compose up -d
 ```
 
-### 访问地址
+#### 4. 访问应用
 
-部署成功后，可通过以下地址访问：
+- **前端界面**: `http://localhost:端口号` (默认: http://localhost)
+- **后端API**: `http://localhost:8000`
+- **API文档**: `http://localhost:8000/docs`
 
-- **前端应用**: http://localhost
-- **后端API**: http://localhost:8000
-- **API文档**: http://localhost:8000/docs
+#### 5. 验证部署
 
-## 📖 使用指南
-
-### 1. 系统配置
-
-首次使用前，请在系统设置页面配置：
-
-1. **DeepSeek AI 设置**
-   - 访问 `系统设置` -> `DeepSeek AI 设置`
-   - 输入 DeepSeek API Key
-   - 测试连接确保配置正确
-
-2. **分析参数默认设置**
-   - 设置默认目标力值 (如: 5, 25, 50)
-   - 配置容差参数
-
-### 2. 数据分析流程
-
-#### 步骤1: 上传数据文件
-- 支持 CSV 格式文件
-- 拖拽上传或点击选择
-- 自动数据验证和预览
-
-#### 步骤2: 配置分析参数
-- 设置目标力值 (N)
-- 配置绝对容差和百分比容差
-- 选择分析选项
-
-#### 步骤3: 执行分析
-- 点击"开始分析"按钮
-- 实时监控分析进度
-- 查看任务状态和日志
-
-#### 步骤4: 查看结果
-- 浏览 35+ 分析图表
-- 查看关键指标和统计数据
-- 生成 AI 智能分析报告
-
-#### 步骤5: 导出报告
-- 下载 Word 综合报告
-- 导出单个图表
-- 保存分析数据
-
-### 3. 图表说明
-
-#### 基础分析图表 (8个)
-- `force_time_series`: 力值时间序列图
-- `force_distribution`: 力值分布直方图
-- `force_boxplot`: 力值箱线图
-- `absolute_deviation_boxplot`: 绝对偏差箱线图
-- `percentage_deviation_boxplot`: 百分比偏差箱线图
-- `interactive_3d_scatter`: 交互式3D散点图
-- `scatter_matrix`: 散点矩阵图
-- `correlation_matrix`: 相关系数矩阵
-
-#### 控制图 (7个)
-- `shewhart_control`: Shewhart控制图
-- `moving_average`: 移动平均控制图
-- `xbar_r_control`: X-bar和R控制图
-- `cusum_control`: CUSUM控制图
-- `ewma_control`: EWMA控制图
-- `imr_control`: I-MR控制图
-- `run_chart`: 运行图
-
-#### 专业质量分析 (12个)
-- `process_capability`: 过程能力分析
-- `pareto_chart`: 帕累托图
-- `residual_analysis`: 残差分析
-- `qq_normality`: Q-Q正态性检验图
-- `radar_chart`: 雷达图
-- `heatmap`: 热图分析
-- `success_rate_trend`: 成功率趋势图
-- `capability_index`: 能力指数图
-- `quality_dashboard`: 质量仪表板
-- `waterfall_chart`: 瀑布图
-- `spatial_clustering`: 空间聚类分析
-- `parallel_coordinates`: 平行坐标图
-
-#### 多维分析 (8个)
-- `xy_heatmap`: XY位置热图
-- `projection_2d`: 2D投影图
-- `position_anomaly_heatmap`: 位置异常热图
-- `spatial_density`: 空间密度图
-- `multivariate_relations`: 多变量关系图
-- `anomaly_patterns`: 异常模式图
-- `quality_distribution_map`: 质量分布图
-- `comprehensive_assessment`: 综合评估图
-
-## 🔧 系统管理
-
-### 服务管理命令
+检查服务状态：
 
 ```bash
-# 查看服务状态
+# 查看容器状态
 docker-compose ps
 
 # 查看服务日志
-docker-compose logs -f [backend|frontend]
+docker-compose logs -f
 
-# 重启服务
-docker-compose restart
-
-# 停止服务
-docker-compose down
-
-# 更新服务
-docker-compose pull
-docker-compose up -d
-```
-
-### 数据管理
-
-```bash
-# 备份数据
-tar -czf backup-$(date +%Y%m%d).tar.gz data/
-
-# 清理临时文件
-docker-compose exec backend rm -rf /app/backend/uploads/*
-docker-compose exec backend rm -rf /app/backend/output/*
-
-# 查看存储使用情况
-du -sh data/
-```
-
-### 性能监控
-
-```bash
-# 查看容器资源使用
-docker stats
-
-# 查看系统健康状态
+# 检查健康状态
 curl http://localhost:8000/health
-
-# 查看API响应时间
-curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8000/health
 ```
 
-## 🛠️ 开发指南
+## 📋 功能特性
 
-### 本地开发环境
+### 核心功能
 
-#### 后端开发
+- **数据上传**: 支持CSV格式的压力数据文件上传
+- **智能分析**: 基于R语言的统计分析和数据处理
+- **图表生成**: 自动生成35种不同类型的数据可视化图表
+- **AI辅助**: 集成DeepSeek AI，提供智能数据分析建议
+- **任务管理**: 分析任务的创建、监控和管理
+- **数据管理**: 历史数据查看、导出和清理
+
+### 技术特性
+
+- **容器化部署**: 基于Docker的一键部署
+- **微服务架构**: 前后端分离，易于扩展
+- **响应式设计**: 支持桌面和移动设备
+- **实时更新**: WebSocket支持的实时状态更新
+- **多环境支持**: 开发、测试、生产环境配置
+
+## 🔧 配置说明
+
+### 端口配置
+
+系统支持灵活的端口配置：
+
+| 配置方式 | 示例 | 说明 |
+|---------|------|------|
+| 环境变量 | `FRONTEND_PORT=8080` | 推荐方式 |
+| .env文件 | `FRONTEND_PORT=8080` | 持久化配置 |
+| docker-compose | `"8080:80"` | 直接修改配置文件 |
+
+### 常用端口示例
+
+| 环境 | 前端端口 | 后端端口 | 配置 |
+|------|----------|----------|------|
+| 生产环境 | 80 | 8000 | `FRONTEND_PORT=80` |
+| 开发环境 | 3000 | 8000 | `FRONTEND_PORT=3000` |
+| 测试环境 | 8080 | 8000 | `FRONTEND_PORT=8080` |
+
+### AI配置
+
+支持两种配置方式：
+
+1. **环境变量配置**（推荐）：
+```bash
+DEEPSEEK_API_KEY=your_api_key_here
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+```
+
+2. **前端界面配置**：
+   - 访问"系统设置"页面
+   - 在"DeepSeek AI 配置"部分输入API信息
+   - 点击"测试连接"验证配置
+
+## 🛠️ 开发环境
+
+### 本地开发
+
+**前端开发：**
 
 ```bash
-# 安装Python依赖
+cd frontend
+npm install
+npm run dev
+```
+
+**后端开发：**
+
+```bash
 cd backend
 pip install -r requirements.txt
-
-# 安装R依赖
-R -e "install.packages(c('tidyverse', 'ggplot2', 'dplyr', ...))"
-
-# 启动开发服务器
 python run_server.py
 ```
 
-#### 前端开发
+### 构建优化
 
-```bash
-# 安装依赖
-cd frontend
-npm install
+系统已针对构建速度进行优化：
 
-# 启动开发服务器
-npm run dev
+- **后端构建时间**: ~9分钟（使用预编译R包）
+- **前端构建时间**: ~30秒（使用esbuild）
+- **总构建时间**: ~10分钟
 
-# 构建生产版本
-npm run build
-```
+## 📊 使用指南
 
-### 自定义配置
+### 数据分析流程
 
-#### 修改分析参数
+1. **上传数据**: 在"数据分析"页面上传CSV文件
+2. **配置参数**: 设置分析参数和选项
+3. **开始分析**: 点击"开始分析"按钮
+4. **查看结果**: 实时查看分析进度和结果
+5. **下载报告**: 下载生成的图表和分析报告
 
-编辑 `backend/r_analysis/pressure_analysis.R` 文件自定义分析逻辑。
+### 支持的数据格式
 
-#### 添加新图表
+- **文件格式**: CSV
+- **编码格式**: UTF-8
+- **数据要求**: 包含时间戳和压力值列
+- **文件大小**: 最大100MB
 
-1. 在 R 脚本中添加新的图表生成函数
-2. 更新前端图表列表
-3. 添加相应的API端点
+### 生成的图表类型
 
-#### 自定义AI分析
+系统自动生成35种图表，包括：
 
-修改 `backend/deepseek/` 目录下的提示词模板。
+- 基础统计图表（直方图、箱线图、散点图等）
+- 时间序列分析图表
+- 相关性分析图表
+- 高级统计图表（密度图、QQ图等）
+- 交互式图表（基于Plotly）
 
-## 📊 系统要求
-
-### 最低配置
-- CPU: 2核
-- 内存: 2GB
-- 存储: 5GB
-- 网络: 稳定的互联网连接（用于AI服务）
-
-### 推荐配置
-- CPU: 4核
-- 内存: 4GB
-- 存储: 10GB
-- 网络: 高速互联网连接
-
-## 🔐 安全说明
-
-- DeepSeek API Key 仅存储在浏览器本地
-- 分析数据仅在本地处理
-- 不会上传敏感数据到外部服务
-- 建议在内网环境中部署使用
-
-## 🐛 故障排除
+## 🔍 故障排除
 
 ### 常见问题
 
-#### 1. 容器启动失败
+**1. 端口被占用**
 ```bash
-# 查看详细错误日志
+# 查看端口占用
+lsof -i :80
+netstat -tulpn | grep :80
+
+# 解决方案：使用其他端口
+FRONTEND_PORT=8080 docker-compose up -d
+```
+
+**2. 容器启动失败**
+```bash
+# 查看详细日志
 docker-compose logs backend
 docker-compose logs frontend
 
-# 重新构建镜像
+# 重新构建
+docker-compose down
 docker-compose build --no-cache
+docker-compose up -d
 ```
 
-#### 2. R分析执行失败
+**3. R分析失败**
 ```bash
 # 检查R包安装
-docker-compose exec backend R -e "installed.packages()"
+docker exec pressure-backend-fast R -e "library(tidyverse)"
 
-# 手动测试R脚本
-docker-compose exec backend Rscript backend/r_analysis/test.R
+# 重新安装R包
+docker-compose down
+docker-compose build --no-cache backend
+docker-compose up -d
 ```
 
-#### 3. 前端无法访问后端
-```bash
-# 检查网络连接
-docker network ls
-docker network inspect pressure-analysis-system_pressure-network
+**4. 前端无法访问后端**
+- 检查网络连接
+- 确认后端服务正常运行
+- 检查防火墙设置
 
-# 重启nginx
-docker-compose restart frontend
-```
+### 性能优化
 
-#### 4. AI分析失败
-- 检查 DeepSeek API Key 配置
-- 确认网络连接正常
-- 查看 API 调用日志
+**内存优化：**
+- 建议分配至少4GB内存给Docker
+- 大文件分析时可能需要更多内存
+
+**存储优化：**
+- 定期清理历史数据和缓存
+- 使用"数据管理"功能进行清理
 
 ## 📝 更新日志
 
-### v2.0.0 (2024-06-13)
-- ✨ 新增中文字体支持
-- 🔧 优化Docker构建性能（构建时间从2.4小时减少到2分钟）
-- 🤖 改进DeepSeek AI配置方式
-- 📊 增加35+专业分析图表
-- 🐳 简化部署流程
-- 🔒 增强安全性配置
+### v1.0.0 (2024-01-XX)
 
-### v1.0.0 (2024-06-01)
-- 🎉 首个正式版本发布
-- 📊 基础数据分析功能
-- 🤖 AI智能分析集成
-- 🐳 Docker容器化部署
+**新功能：**
+- ✅ 完整的数据分析流程
+- ✅ 35种图表自动生成
+- ✅ DeepSeek AI集成
+- ✅ 容器化部署
+- ✅ 灵活的端口配置
+- ✅ 实时分析进度显示
 
-## 📄 开源协议
+**优化：**
+- ✅ 构建时间优化（50%提升）
+- ✅ 前端性能优化
+- ✅ R包安装优化
+- ✅ 错误处理改进
 
-本项目基于 MIT 协议开源，详见 [LICENSE](LICENSE) 文件。
+## 📄 许可证
 
-## 🤝 贡献指南
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-欢迎提交 Issue 和 Pull Request 来改进项目。
+## 🤝 贡献
 
-## 📧 联系方式
+欢迎提交Issue和Pull Request来改进这个项目。
 
-如有问题或建议，请通过以下方式联系：
+## 📞 支持
 
-- 📧 邮箱: [your-email@example.com]
-- 🐛 问题反馈: [GitHub Issues]
-- 📖 文档: [项目文档]
+如果您在使用过程中遇到问题，请：
+
+1. 查看本文档的故障排除部分
+2. 检查 [Issues](../../issues) 中是否有类似问题
+3. 创建新的Issue描述您的问题
 
 ---
 
-**⭐ 如果这个项目对您有帮助，请给我们一个星标！** 
+**快速部署命令：**
+
+```bash
+# 克隆项目
+git clone <repository-url>
+cd pressure-analysis-system
+
+# 启动服务（默认端口80）
+docker-compose up -d
+
+# 或使用自定义端口
+FRONTEND_PORT=8080 docker-compose up -d
+
+# 访问应用
+open http://localhost  # 或 http://localhost:8080
+``` 

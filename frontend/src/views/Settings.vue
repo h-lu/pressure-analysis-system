@@ -55,40 +55,7 @@
 
 
 
-      <!-- 系统信息 -->
-      <el-card class="setting-card" shadow="hover">
-        <template #header>
-          <div class="card-header">
-            <span>系统信息</span>
-            <el-button size="small" @click="refreshSystemInfo" :loading="refreshingInfo">
-              刷新
-            </el-button>
-          </div>
-        </template>
-        
-        <div class="system-info">
-          <el-descriptions :column="2" border>
-            <el-descriptions-item label="系统版本">{{ systemInfo.version }}</el-descriptions-item>
-            <el-descriptions-item label="运行状态">
-              <el-tag :type="systemInfo.status === 'running' ? 'success' : 'danger'">
-                {{ systemInfo.status === 'running' ? '正常运行' : '异常' }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="运行时间">{{ formatUptime(systemInfo.uptime) }}</el-descriptions-item>
-            <el-descriptions-item label="CPU使用率">{{ systemInfo.cpuUsage }}%</el-descriptions-item>
-            <el-descriptions-item label="内存使用">{{ systemInfo.memoryUsage }}</el-descriptions-item>
-            <el-descriptions-item label="磁盘使用">{{ systemInfo.diskUsage }}</el-descriptions-item>
-            <el-descriptions-item label="R引擎状态">
-              <el-tag :type="systemInfo.rEngineStatus === 'ready' ? 'success' : 'warning'">
-                {{ systemInfo.rEngineStatus === 'ready' ? '就绪' : '初始化中' }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="数据库状态">
-              <el-tag type="success">正常</el-tag>
-            </el-descriptions-item>
-          </el-descriptions>
-        </div>
-      </el-card>
+
 
       <!-- 数据管理 -->
       <el-card class="setting-card" shadow="hover">
@@ -181,18 +148,7 @@ const aiConnectionStatus = ref('disconnected')
 const testingConnection = ref(false)
 const savingConfig = ref(false)
 
-// 系统信息
-const systemInfo = reactive({
-  version: '1.0.0',
-  status: 'running',
-  uptime: 0,
-  cpuUsage: 0,
-  memoryUsage: '0 MB',
-  diskUsage: '0 GB',
-  rEngineStatus: 'ready'
-})
 
-const refreshingInfo = ref(false)
 
 // 存储统计
 const storageStats = reactive({
@@ -260,34 +216,7 @@ const saveAIConfig = async () => {
 
 
 
-// 刷新系统信息
-const refreshSystemInfo = async () => {
-  refreshingInfo.value = true
-  try {
-    const response = await fetch(`${API_BASE}/api/system-info`)
-    const result = await response.json()
-    
-    if (result.success) {
-      const data = result.data
-      systemInfo.version = data.version
-      systemInfo.status = data.status
-      systemInfo.uptime = data.uptime
-      systemInfo.cpuUsage = data.cpu_usage
-      systemInfo.memoryUsage = data.memory_usage
-      systemInfo.diskUsage = data.disk_usage
-      systemInfo.rEngineStatus = data.r_engine_status
-    } else {
-      throw new Error(result.message || '获取系统信息失败')
-    }
-    
-    ElMessage.success('系统信息已刷新')
-  } catch (error) {
-    ElMessage.error('获取系统信息失败')
-    console.error('刷新系统信息失败:', error)
-  } finally {
-    refreshingInfo.value = false
-  }
-}
+
 
 // 获取存储统计
 const getStorageStats = async () => {
@@ -333,18 +262,7 @@ const getAIConfig = async () => {
   }
 }
 
-// 格式化运行时间
-const formatUptime = (ms) => {
-  const seconds = Math.floor(ms / 1000)
-  const minutes = Math.floor(seconds / 60)
-  const hours = Math.floor(minutes / 60)
-  const days = Math.floor(hours / 24)
-  
-  if (days > 0) return `${days}天 ${hours % 24}小时`
-  if (hours > 0) return `${hours}小时 ${minutes % 60}分钟`
-  if (minutes > 0) return `${minutes}分钟 ${seconds % 60}秒`
-  return `${seconds}秒`
-}
+
 
 // 清理缓存
 const clearCache = async () => {
@@ -378,8 +296,6 @@ const clearCache = async () => {
 const exportConfig = () => {
   const config = {
     ai: aiConfig,
-    analysis: analysisConfig,
-    ui: uiConfig,
     exportTime: new Date().toISOString()
   }
   
@@ -405,13 +321,9 @@ const importConfig = (event) => {
       const config = JSON.parse(e.target.result)
       
       if (config.ai) Object.assign(aiConfig, config.ai)
-      if (config.analysis) Object.assign(analysisConfig, config.analysis)
-      if (config.ui) Object.assign(uiConfig, config.ui)
       
       // 保存到本地存储
       saveAIConfig()
-      saveAnalysisConfig()
-      saveUIConfig()
       
       ElMessage.success('配置导入成功')
     } catch (error) {
@@ -480,7 +392,6 @@ const cleanAllData = async () => {
 onMounted(() => {
   // 初始化数据
   getAIConfig()
-  refreshSystemInfo()
   getStorageStats()
   testAIConnection()
 })
@@ -522,9 +433,7 @@ onMounted(() => {
 
 
 
-.system-info {
-  margin-top: 16px;
-}
+
 
 .storage-stats {
   margin-bottom: 24px;

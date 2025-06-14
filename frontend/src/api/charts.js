@@ -1,4 +1,5 @@
 import { apiClient } from '@/utils/http'
+import { getFullApiURL } from '@/config'
 
 export const chartsAPI = {
   // 获取图表
@@ -11,7 +12,8 @@ export const chartsAPI = {
   // 检查图表是否存在
   async checkChart(taskId, chartName) {
     try {
-      const response = await fetch(`http://localhost:8000/api/chart/${taskId}/${chartName}`, {
+      const url = getFullApiURL(`/api/chart/${taskId}/${chartName}`)
+      const response = await fetch(url, {
         method: 'HEAD'
       })
       return response.ok
@@ -53,7 +55,7 @@ export const chartsAPI = {
       return {
         name: chartName,
         exists,
-        url: exists ? `http://localhost:8000/api/chart/${taskId}/${chartName}` : null
+        url: exists ? getFullApiURL(`/api/chart/${taskId}/${chartName}`) : null
       }
     })
     
@@ -113,7 +115,8 @@ export const chartsAPI = {
   // 获取图表元数据
   async getChartMetadata(taskId, chartName) {
     try {
-      const response = await fetch(`http://localhost:8000/api/chart/${taskId}/${chartName}`, {
+      const url = getFullApiURL(`/api/chart/${taskId}/${chartName}`)
+      const response = await fetch(url, {
         method: 'HEAD'
       })
       
@@ -126,7 +129,7 @@ export const chartsAPI = {
         size: response.headers.get('content-length'),
         type: response.headers.get('content-type'),
         lastModified: response.headers.get('last-modified'),
-        url: `http://localhost:8000/api/chart/${taskId}/${chartName}`
+        url: url
       }
     } catch (error) {
       throw new Error(`获取图表元数据失败: ${error.message}`)

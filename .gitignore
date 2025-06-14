@@ -124,6 +124,6 @@ ipython_config.py
 .env.test.local
 .env.production.local 
 
-临时文件/
-页面设计图/
+
 .cursor/
+data/

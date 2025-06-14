@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { appConfig } from '@/config'
 
 // 创建axios实例
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000',
-  timeout: 30000,
+  baseURL: appConfig.api.baseURL,
+  timeout: appConfig.api.timeout,
   headers: {
     'Content-Type': 'application/json'
   }
