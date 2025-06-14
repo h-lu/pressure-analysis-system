@@ -50,22 +50,22 @@ DEEPSEEK_BASE_URL=https://api.deepseek.com
 **使用默认端口 (80)：**
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 **使用自定义端口：**
 
 ```bash
 # 方法1: 通过环境变量
-FRONTEND_PORT=8080 docker-compose up -d
+FRONTEND_PORT=8080 docker compose up -d
 
 # 方法2: 修改 .env 文件
 echo "FRONTEND_PORT=8080" >> .env
-docker-compose up -d
+docker compose up -d
 
 # 方法3: 导出环境变量
 export FRONTEND_PORT=8080
-docker-compose up -d
+docker compose up -d
 ```
 
 #### 4. 访问应用
@@ -80,10 +80,10 @@ docker-compose up -d
 
 ```bash
 # 查看容器状态
-docker-compose ps
+docker compose ps
 
 # 查看服务日志
-docker-compose logs -f
+docker compose logs -f
 
 # 检查健康状态
 curl http://localhost:8000/health
@@ -118,7 +118,7 @@ curl http://localhost:8000/health
 |---------|------|------|
 | 环境变量 | `FRONTEND_PORT=8080` | 推荐方式 |
 | .env文件 | `FRONTEND_PORT=8080` | 持久化配置 |
-| docker-compose | `"8080:80"` | 直接修改配置文件 |
+| docker compose | `"8080:80"` | 直接修改配置文件 |
 
 ### 常用端口示例
 
@@ -209,19 +209,19 @@ lsof -i :80
 netstat -tulpn | grep :80
 
 # 解决方案：使用其他端口
-FRONTEND_PORT=8080 docker-compose up -d
+FRONTEND_PORT=8080 docker compose up -d
 ```
 
 **2. 容器启动失败**
 ```bash
 # 查看详细日志
-docker-compose logs backend
-docker-compose logs frontend
+docker compose logs backend
+docker compose logs frontend
 
 # 重新构建
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+docker compose down
+docker compose build --no-cache
+docker compose up -d
 ```
 
 **3. R分析失败**
@@ -230,9 +230,9 @@ docker-compose up -d
 docker exec pressure-backend-fast R -e "library(tidyverse)"
 
 # 重新安装R包
-docker-compose down
-docker-compose build --no-cache backend
-docker-compose up -d
+docker compose down
+docker compose build --no-cache backend
+docker compose up -d
 ```
 
 **4. 前端无法访问后端**
@@ -294,10 +294,10 @@ git clone <repository-url>
 cd pressure-analysis-system
 
 # 启动服务（默认端口80）
-docker-compose up -d
+docker compose up -d
 
 # 或使用自定义端口
-FRONTEND_PORT=8080 docker-compose up -d
+FRONTEND_PORT=8080 docker compose up -d
 
 # 访问应用
 open http://localhost  # 或 http://localhost:8080
